@@ -5,15 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>dGEN Town — Visual Collection for dGEN1</title>
 
-<!-- Keeping fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
   :root{
     --bg:#000000;
     --muted:#0f1112;
-    --accent1:#00f0ff; /* electric cyan */
-    --accent2:#b043ff; /* violet */
+    --accent1:#00f0ff;
+    --accent2:#b043ff;
     --glass: rgba(255,255,255,0.04);
     --text: rgba(255,255,255,0.9);
     --small: 12px;
@@ -26,29 +25,27 @@
     font-family: "Rajdhani", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
+    overflow:hidden;
   }
 
-  /* 居中容器:保证 1:1 的 720x720 视窗在任意屏幕居中显示 */
   .stage {
-    min-height:100vh;
+    width:100vw;
+    height:100vh;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:40px 20px;
     box-sizing:border-box;
   }
 
   .frame {
- 
+    width:100%;
+    height:100%;
     background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.02);
     overflow:hidden;
     position:relative;
-    border:1px solid rgba(255,255,255,0.03);
+    border:none;
   }
 
-  /* 微粒背景(全局) */
   .grain {
     position:absolute;
     inset:0;
@@ -61,7 +58,7 @@
 
   header {
     position:absolute;
-    top:0;
+    top:18px;
     left:20px;
     right:20px;
     display:flex;
@@ -123,16 +120,16 @@
   .btn:hover{ transform:translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.5); }
   .btn.toggled { background: linear-gradient(90deg, rgba(0,240,255,0.06), rgba(176,67,255,0.02)); }
 
-  /* 主页模板网格 */
   .gallery {
     padding:88px 36px 36px 36px;
     box-sizing:border-box;
     height:100%;
     display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-auto-rows: minmax(180px, 1fr);
     gap:18px;
     z-index:10;
+    overflow-y:auto;
   }
 
   .card {
@@ -163,7 +160,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   }
 
-  /* 展示层(overlay) */
   .overlay {
     position:absolute;
     inset:0;
@@ -178,15 +174,15 @@
   @keyframes overlayIn { from{opacity:0; transform:scale(.995);} to{opacity:1; transform:none;} }
 
   .canvas-wrap{
-    width:720px;
-    height:720px;
+    width:100%;
+    height:100%;
     position:relative;
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
-    border-radius:10px;
     background:transparent;
+    cursor:pointer;
   }
 
   .overlay-ui {
@@ -196,7 +192,15 @@
     justify-content:space-between;
     align-items:flex-start;
     pointer-events:none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
+  
+  .overlay-ui.hidden {
+    opacity:0;
+    transform:translateY(-10px);
+    pointer-events:none;
+  }
+  
   .overlay-left, .overlay-right {
     pointer-events:auto;
     display:flex;
@@ -218,7 +222,6 @@
     opacity:0.9;
   }
 
-  /* bottom-right autoplay bubble */
   .bubble {
     position:absolute;
     right:18px;
@@ -235,7 +238,6 @@
     opacity:0.9;
   }
 
-  /* footer micro logo */
   .micro {
     position:absolute;
     left:18px;
@@ -245,7 +247,6 @@
     pointer-events:auto;
   }
 
-  /* Pic Frame controls */
   .pic-controls {
     display:flex;
     gap:8px;
@@ -259,24 +260,8 @@
     background:transparent;border:1px dashed rgba(255,255,255,0.06);padding:6px;border-radius:6px;color:var(--text);font-size:12px;
   }
 
-  /* 提示文字 */
-  .hint {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    font-size:13px;
-    color:rgba(255,255,255,0.12);
-    text-align:center;
-    width:70%;
-    pointer-events:none;
-  }
-
-  /* small responsive tweak for very small screens */
   @media (max-width:800px){
-    .frame{ width:90vw; height:90vw; }
-    .canvas-wrap{ width:90vw; height:90vw; }
-    .gallery{ grid-template-columns: repeat(3, 1fr); padding:80px 20px 20px 20px; }
+    .gallery{ grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); padding:80px 20px 20px 20px; }
   }
 
 </style>
@@ -291,72 +276,44 @@
           <div class="logo">dGEN1</div>
           <div>
             <h1>dGEN Town</h1>
-            <!-- Changed back to English -->
             <p style="margin-top:4px;">Visual Collection — Click card to enter</p>
           </div>
         </div>
 
         <div class="controls">
-          <!-- Changed all button text to English -->
           <button id="autoplayToggle" class="btn" title="Toggle autoplay">Autoplay</button>
           <button id="randomBtn" class="btn" title="Random template">Random</button>
           <button id="helpBtn" class="btn" title="Help/Info">Info</button>
         </div>
       </header>
 
-      <!-- 模板网格 -->
-      <main class="gallery" id="gallery" aria-hidden="false">
-        <!-- 12 cards created by JS for easier mapping -->
-      </main>
+      <main class="gallery" id="gallery" aria-hidden="false"></main>
 
       <div class="micro">dGEN Town · © 2025</div>
 
-      <!-- overlay for template display -->
       <div class="overlay" id="overlay" aria-hidden="true">
-        <div class="canvas-wrap" id="canvasWrap">
-          <!-- main canvas inserted by JS -->
-        </div>
+        <div class="canvas-wrap" id="canvasWrap"></div>
 
-        <div class="overlay-ui" aria-hidden="false">
+        <div class="overlay-ui" id="overlayUI" aria-hidden="false">
           <div class="overlay-left">
-            <!-- Changed back button text to English -->
             <button id="backBtn" class="back-btn" title="Back to gallery">← Back</button>
             <div class="small" id="currentLabel">—</div>
           </div>
           <div class="overlay-right" style="align-items:center">
-            <!-- PicFrame controls appear here dynamically -->
             <div id="picControlsContainer"></div>
             <div class="bubble">
               <div class="dot" id="autoplayDot" style="display:none"></div>
-              <!-- Changed to English -->
               <div class="small">Auto</div>
               <button id="nextBtn" class="btn" title="Next template">Next</button>
             </div>
           </div>
         </div>
-
-        <!-- Removed the hint overlay that said "Click to return" -->
       </div>
 
     </div>
   </div>
 
 <script>
-/*
-  dGEN Town - index.html
-  Single-file visual gallery for dGEN1 (720x720)
-  - 12 templates
-  - smooth transitions
-  - autoplay with toggle
-  - Pic Frame supports file upload or image URL
-  NOTES:
-  - Each template is a module in templates object: { id, name, preview, mount, unmount }
-  - preview(ctx, w, h) is used to render small thumbnail canvas (kept cheap)
-  - mount(canvas) called when entering overlay to run full animation
-  - unmount() should stop RAF loops and clear resources
-*/
-
-// Utilities
 const $ = sel => document.querySelector(sel);
 const create = (tag, attrs={}, parent=null) => {
   const el = document.createElement(tag);
@@ -372,7 +329,11 @@ const create = (tag, attrs={}, parent=null) => {
 const TEMPLATE_IDS = [
   'cyberMinimal','cryptoOrb','retroTerminal','zenSpace',
   'picFrame','liquidWaves','matrixRain','hexGridPulse',
-  'clockSync','codeVerse','aiBloom','signatureLoop'
+  'clockSync','codeVerse','aiBloom','signatureLoop',
+  'neonCity','glitchArt','vaporwave','hologram',
+  'pixelStorm','scanlines','dataStream','particleNebula',
+  'geometricDance','synthwave','digitalRain','cosmicVoid',
+  'fractalTree','waveform','starfield','cyberpunkGrid'
 ];
 
 const TEMPLATE_META = {
@@ -387,16 +348,31 @@ const TEMPLATE_META = {
   clockSync: {name:'Clock Sync'},
   codeVerse: {name:'Code Verse'},
   aiBloom: {name:'AI Bloom'},
-  signatureLoop: {name:'Signature Loop'}
+  signatureLoop: {name:'Signature Loop'},
+  neonCity: {name:'Neon City'},
+  glitchArt: {name:'Glitch Art'},
+  vaporwave: {name:'Vaporwave'},
+  hologram: {name:'Hologram'},
+  pixelStorm: {name:'Pixel Storm'},
+  scanlines: {name:'Scanlines'},
+  dataStream: {name:'Data Stream'},
+  particleNebula: {name:'Particle Nebula'},
+  geometricDance: {name:'Geometric Dance'},
+  synthwave: {name:'Synthwave'},
+  digitalRain: {name:'Digital Rain'},
+  cosmicVoid: {name:'Cosmic Void'},
+  fractalTree: {name:'Fractal Tree'},
+  waveform: {name:'Waveform'},
+  starfield: {name:'Starfield'},
+  cyberpunkGrid: {name:'Cyberpunk Grid'}
 };
 
-// global controller
 let autoplay = false;
 let autoplayTimer = null;
 let currentIndex = -1;
-let activeInstance = null; // template instance with unmount
+let activeInstance = null;
+let uiVisible = true;
 
-// create gallery cards
 const gallery = $('#gallery');
 TEMPLATE_IDS.forEach((id, i)=>{
   const card = create('div', {class:'card', id:'card-'+id}, gallery);
@@ -409,17 +385,14 @@ TEMPLATE_IDS.forEach((id, i)=>{
     const ctx = thumb.getContext('2d');
     const w = thumb.width, h = thumb.height;
     
-    // 更亮的背景
     ctx.fillStyle = '#0a0a0c';
     ctx.fillRect(0,0,w,h);
     
-    // 为每个模板创建独特且可见的预览图形
     ctx.save();
     ctx.translate(w/2, h/2);
     
     switch(id) {
       case 'cyberMinimal':
-        // 旋转方块
         ctx.strokeStyle = 'rgba(0,240,255,0.4)';
         ctx.lineWidth = 3;
         ctx.strokeRect(-60, -60, 120, 120);
@@ -429,21 +402,15 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'cryptoOrb':
-        // 发光球体
         const grd = ctx.createRadialGradient(0,0,10,0,0,80);
         grd.addColorStop(0, 'rgba(0,240,255,0.6)');
         grd.addColorStop(0.5, 'rgba(176,67,255,0.3)');
         grd.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grd;
         ctx.fillRect(-100,-100,200,200);
-        ctx.beginPath();
-        ctx.arc(0,0,40,0,Math.PI*2);
-        ctx.fillStyle = 'rgba(0,240,255,0.2)';
-        ctx.fill();
         break;
         
       case 'retroTerminal':
-        // 终端文字
         ctx.font = '14px monospace';
         ctx.fillStyle = 'rgba(0,255,140,0.6)';
         for(let j=0; j<8; j++) {
@@ -452,22 +419,13 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'zenSpace':
-        // 柔和圆圈
         ctx.beginPath();
         ctx.arc(0,0,80,0,Math.PI*2);
         ctx.fillStyle = 'rgba(176,67,255,0.25)';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-        ctx.lineWidth = 2;
-        for(let j=0; j<3; j++) {
-          ctx.beginPath();
-          ctx.arc(0, j*15, 60-j*15, 0, Math.PI*2);
-          ctx.stroke();
-        }
         break;
         
       case 'picFrame':
-        // 相框轮廓
         ctx.strokeStyle = 'rgba(0,240,255,0.4)';
         ctx.lineWidth = 3;
         ctx.strokeRect(-80,-80,160,160);
@@ -477,7 +435,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'liquidWaves':
-        // 波浪线条
         ctx.strokeStyle = 'rgba(0,240,255,0.4)';
         ctx.lineWidth = 2;
         for(let j=0; j<5; j++) {
@@ -492,7 +449,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'matrixRain':
-        // 矩阵风格
         ctx.font = '16px monospace';
         ctx.fillStyle = 'rgba(0,255,140,0.5)';
         for(let j=0; j<15; j++) {
@@ -503,7 +459,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'hexGridPulse':
-        // 六边形
         ctx.strokeStyle = 'rgba(0,240,255,0.3)';
         ctx.lineWidth = 2;
         for(let hx=-2; hx<=2; hx++) {
@@ -525,28 +480,20 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'clockSync':
-        // 时钟表盘
         ctx.beginPath();
         ctx.arc(0,0,70,0,Math.PI*2);
         ctx.strokeStyle = 'rgba(255,255,255,0.2)';
         ctx.lineWidth = 2;
         ctx.stroke();
-        // 时针分针
         ctx.strokeStyle = 'rgba(0,240,255,0.6)';
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(0,0);
         ctx.lineTo(0,-50);
         ctx.stroke();
-        ctx.strokeStyle = 'rgba(176,67,255,0.6)';
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.lineTo(35,0);
-        ctx.stroke();
         break;
         
       case 'codeVerse':
-        // 代码片段
         ctx.font = '12px monospace';
         ctx.fillStyle = 'rgba(255,255,255,0.3)';
         const snippets = ['function()', 'const x =', 'if (true)', '{ code }', 'return;'];
@@ -556,7 +503,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'aiBloom':
-        // 花瓣
         for(let j=0; j<12; j++) {
           const ang = (j/12)*Math.PI*2;
           ctx.beginPath();
@@ -568,7 +514,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'signatureLoop':
-        // 流动曲线
         ctx.strokeStyle = 'rgba(0,240,255,0.3)';
         ctx.lineWidth = 2;
         for(let j=0; j<4; j++) {
@@ -582,22 +527,208 @@ TEMPLATE_IDS.forEach((id, i)=>{
           ctx.stroke();
         }
         break;
+        
+      case 'neonCity':
+        ctx.strokeStyle = 'rgba(255,0,255,0.5)';
+        ctx.lineWidth = 2;
+        for(let j=0; j<8; j++) {
+          const h = 40 + Math.random()*60;
+          ctx.strokeRect(-100 + j*25, 50-h, 20, h);
+        }
+        ctx.fillStyle = 'rgba(0,240,255,0.3)';
+        ctx.fillRect(-120, 50, 240, 2);
+        break;
+        
+      case 'glitchArt':
+        for(let j=0; j<10; j++) {
+          ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},255,0.3)`;
+          ctx.fillRect(-100 + Math.random()*200, -100 + Math.random()*200, 40, 8);
+        }
+        break;
+        
+      case 'vaporwave':
+        const grd2 = ctx.createLinearGradient(0,-100,0,100);
+        grd2.addColorStop(0, 'rgba(255,0,255,0.3)');
+        grd2.addColorStop(1, 'rgba(0,240,255,0.3)');
+        ctx.fillStyle = grd2;
+        ctx.fillRect(-100,-100,200,200);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        for(let j=-5; j<=5; j++) {
+          ctx.beginPath();
+          ctx.moveTo(-100, j*20);
+          ctx.lineTo(100, j*20);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'hologram':
+        for(let j=0; j<5; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 20 + j*15, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(0,240,255,${0.4 - j*0.06})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'pixelStorm':
+        for(let j=0; j<50; j++) {
+          ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},255,0.5)`;
+          ctx.fillRect(-100 + Math.random()*200, -100 + Math.random()*200, 6, 6);
+        }
+        break;
+        
+      case 'scanlines':
+        ctx.strokeStyle = 'rgba(0,255,140,0.3)';
+        ctx.lineWidth = 1;
+        for(let j=-100; j<100; j+=4) {
+          ctx.beginPath();
+          ctx.moveTo(-100, j);
+          ctx.lineTo(100, j);
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(0,240,255,0.2)';
+        ctx.fillRect(-60, -60, 120, 120);
+        break;
+        
+      case 'dataStream':
+        ctx.font = '10px monospace';
+        ctx.fillStyle = 'rgba(0,240,255,0.4)';
+        for(let j=0; j<20; j++) {
+          ctx.fillText(Math.random().toString(2).substr(2,8), -100 + (j%5)*50, -80 + Math.floor(j/5)*40);
+        }
+        break;
+        
+      case 'particleNebula':
+        for(let j=0; j<100; j++) {
+          const x = (Math.random()-0.5)*200;
+          const y = (Math.random()-0.5)*200;
+          const size = Math.random()*3;
+          ctx.fillStyle = `rgba(176,67,255,${Math.random()*0.5})`;
+          ctx.fillRect(x, y, size, size);
+        }
+        break;
+        
+      case 'geometricDance':
+        for(let j=0; j<6; j++) {
+          ctx.save();
+          ctx.rotate((j/6)*Math.PI*2);
+          ctx.strokeStyle = `rgba(0,240,255,${0.3 + j*0.05})`;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(30, -10, 40, 20);
+          ctx.restore();
+        }
+        break;
+        
+      case 'synthwave':
+        const grd3 = ctx.createLinearGradient(0,-100,0,100);
+        grd3.addColorStop(0, 'rgba(255,0,128,0.4)');
+        grd3.addColorStop(0.5, 'rgba(128,0,255,0.3)');
+        grd3.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd3;
+        ctx.fillRect(-100,-100,200,200);
+        ctx.strokeStyle = 'rgba(255,0,255,0.3)';
+        for(let j=-5; j<=5; j++) {
+          ctx.beginPath();
+          ctx.moveTo(j*20, -100);
+          ctx.lineTo(j*20, 100);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'digitalRain':
+        ctx.font = '14px monospace';
+        for(let j=0; j<12; j++) {
+          ctx.fillStyle = `rgba(0,255,140,${0.2 + Math.random()*0.4})`;
+          ctx.fillText(String.fromCharCode(0x30A0 + Math.random()*96), -100 + j*20, -80 + (j%4)*50);
+        }
+        break;
+        
+      case 'cosmicVoid':
+        const grd4 = ctx.createRadialGradient(0,0,0,0,0,120);
+        grd4.addColorStop(0, 'rgba(128,0,255,0.4)');
+        grd4.addColorStop(0.7, 'rgba(0,0,128,0.2)');
+        grd4.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd4;
+        ctx.fillRect(-120,-120,240,240);
+        for(let j=0; j<30; j++) {
+          ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          ctx.fillRect((Math.random()-0.5)*200, (Math.random()-0.5)*200, 2, 2);
+        }
+        break;
+        
+      case 'fractalTree':
+        ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+        ctx.lineWidth = 2;
+        function drawBranch(x, y, len, angle, depth) {
+          if(depth === 0) return;
+          const x2 = x + Math.cos(angle) * len;
+          const y2 = y + Math.sin(angle) * len;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+          drawBranch(x2, y2, len*0.7, angle-0.5, depth-1);
+          drawBranch(x2, y2, len*0.7, angle+0.5, depth-1);
+        }
+        drawBranch(0, 80, 40, -Math.PI/2, 4);
+        break;
+        
+      case 'waveform':
+        ctx.strokeStyle = 'rgba(0,240,255,0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for(let x=-120; x<=120; x+=4) {
+          const y = Math.sin(x*0.1)*30 + Math.cos(x*0.05)*20;
+          if(x===-120) ctx.moveTo(x,y);
+          else ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+        break;
+        
+      case 'starfield':
+        for(let j=0; j<80; j++) {
+          const x = (Math.random()-0.5)*200;
+          const y = (Math.random()-0.5)*200;
+          const size = Math.random()*2 + 0.5;
+          ctx.fillStyle = `rgba(255,255,255,${Math.random()*0.8 + 0.2})`;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'cyberpunkGrid':
+        ctx.strokeStyle = 'rgba(255,0,255,0.3)';
+        ctx.lineWidth = 1;
+        for(let j=-5; j<=5; j++) {
+          ctx.beginPath();
+          ctx.moveTo(-100, j*20);
+          ctx.lineTo(100, j*20);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(j*20, -100);
+          ctx.lineTo(j*20, 100);
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(0,240,255,0.2)';
+        ctx.fillRect(-40, -40, 80, 80);
+        break;
     }
     
     ctx.restore();
     
-    // 底部标签栏
     ctx.fillStyle = 'rgba(0,0,0,0.4)';
     ctx.fillRect(0, h-40, w, 40);
     ctx.fillStyle = 'rgba(255,255,255,0.8)';
     ctx.font = '14px Rajdhani, sans-serif';
     ctx.fillText(TEMPLATE_META[id].name, 12, h-16);
-  }, 50 + i*20); // 稍微错开渲染时间
+  }, 50 + i*20);
 });
 
-// overlay elements
 const overlay = $('#overlay');
 const canvasWrap = $('#canvasWrap');
+const overlayUI = $('#overlayUI');
 const backBtn = $('#backBtn');
 const currentLabel = $('#currentLabel');
 const autoplayToggle = $('#autoplayToggle');
@@ -606,7 +737,16 @@ const autoplayDot = $('#autoplayDot');
 const picControlsContainer = $('#picControlsContainer');
 const randomBtn = $('#randomBtn');
 const helpBtn = $('#helpBtn');
-const overlayHint = $('#overlayHint'); // Note: This element is present in HTML but not used in JS
+
+canvasWrap.addEventListener('click', (e)=> {
+  if(e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+  uiVisible = !uiVisible;
+  if(uiVisible) {
+    overlayUI.classList.remove('hidden');
+  } else {
+    overlayUI.classList.add('hidden');
+  }
+});
 
 backBtn.addEventListener('click', closeOverlay);
 autoplayToggle.addEventListener('click', ()=> {
@@ -621,41 +761,38 @@ randomBtn.addEventListener('click', ()=> {
   openTemplate(idx);
 });
 helpBtn.addEventListener('click', ()=> {
-  alert('dGEN Town — 12 templates for dGEN1. Click cards to view. Autoplay switches every 20s. Pic Frame supports file upload or image URL.');
+  alert(`dGEN Town — ${TEMPLATE_IDS.length} templates for dGEN1. Click cards to view. Click canvas to hide/show controls. Autoplay switches every 20s.`);
 });
 
-// Auto-play functions
 function startAutoplay(){
   stopAutoplay();
   autoplayTimer = setInterval(()=> {
     nextTemplate();
-  }, 20000); // 20s
+  }, 20000);
 }
 function stopAutoplay(){
   if(autoplayTimer){ clearInterval(autoplayTimer); autoplayTimer = null; }
 }
 
-// Overlay open/close
 function openTemplate(index){
-  // clamp
   index = (index + TEMPLATE_IDS.length) % TEMPLATE_IDS.length;
   currentIndex = index;
   const id = TEMPLATE_IDS[index];
   currentLabel.textContent = TEMPLATE_META[id].name;
   overlay.classList.add('active');
   overlay.setAttribute('aria-hidden','false');
+  uiVisible = true;
+  overlayUI.classList.remove('hidden');
 
-  // create canvas for template
   canvasWrap.innerHTML = '';
-  const canvas = create('canvas', {width:720, height:720});
-  canvas.style.width = '720px'; canvas.style.height='720px';
+  const canvas = create('canvas', {width:window.innerWidth, height:window.innerHeight});
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
   canvasWrap.appendChild(canvas);
 
-  // mount template
   const tmpl = templates[id];
   if(!tmpl) return;
   activeInstance = tmpl.mount(canvas, {onExit: closeOverlay});
-  // show pic controls if picFrame
   picControlsContainer.innerHTML = '';
   if(id === 'picFrame'){
     const el = createPicControls(activeInstance);
@@ -666,7 +803,6 @@ function openTemplate(index){
 function closeOverlay(){
   overlay.classList.remove('active');
   overlay.setAttribute('aria-hidden','true');
-  // unmount template
   if(activeInstance && typeof activeInstance.unmount === 'function') {
     activeInstance.unmount();
     activeInstance = null;
@@ -674,19 +810,17 @@ function closeOverlay(){
   canvasWrap.innerHTML = '';
 }
 
-// next template
 function nextTemplate(){
   const idx = (currentIndex + 1) % TEMPLATE_IDS.length;
-  // replace overlay with next
   if(overlay.classList.contains('active')){
-    // unmount
     if(activeInstance && typeof activeInstance.unmount === 'function') activeInstance.unmount();
     currentIndex = idx;
     const id = TEMPLATE_IDS[idx];
     currentLabel.textContent = TEMPLATE_META[id].name;
     canvasWrap.innerHTML = '';
-    const canvas = create('canvas', {width:720, height:720});
-    canvas.style.width = '720px'; canvas.style.height='720px';
+    const canvas = create('canvas', {width:window.innerWidth, height:window.innerHeight});
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
     canvasWrap.appendChild(canvas);
     const tmpl = templates[id];
     activeInstance = tmpl.mount(canvas, {onExit: closeOverlay});
@@ -700,15 +834,6 @@ function nextTemplate(){
   }
 }
 
-/* ===========================
-    Template implementations
-   ===========================
-   Each template returns an object with:
-   - mount(canvas, opts) -> instance { unmount() }
-   - (optional) preview draw handled above in simple form
-*/
-
-// Shared helper: stop flag and RAF loop helper
 function makeRunner(renderFn){
   let running = true;
   let rafId = null;
@@ -723,7 +848,6 @@ function makeRunner(renderFn){
   };
 }
 
-// Template: Cyber Minimal
 function cyberMinimalMount(canvas){
   const ctx = canvas.getContext('2d');
   const w = canvas.width, h = canvas.height;
@@ -731,13 +855,11 @@ function cyberMinimalMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (t - t0)/1000;
     ctx.clearRect(0,0,w,h);
-    // background vignette
     const g = ctx.createLinearGradient(0,0,0,h);
     g.addColorStop(0, 'rgba(0,0,0,0.9)');
     g.addColorStop(1, 'rgba(10,10,12,0.95)');
     ctx.fillStyle = g;
     ctx.fillRect(0,0,w,h);
-    // central rotating square with neon stroke
     ctx.save();
     ctx.translate(w/2, h/2);
     ctx.rotate(tt*0.18);
@@ -748,7 +870,6 @@ function cyberMinimalMount(canvas){
       ctx.strokeRect(-s/2, -s/2, s, s);
     }
     ctx.restore();
-    // moving thin lines
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'rgba(176,67,255,0.06)';
     ctx.beginPath();
@@ -757,21 +878,14 @@ function cyberMinimalMount(canvas){
       ctx.moveTo(40, y); ctx.lineTo(w-40, y);
     }
     ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('dGEN1 • Cyber Minimal', 24, h-24);
   });
-  return {
-    unmount(){ runner.stop(); }
-  };
+  return { unmount(){ runner.stop(); } };
 }
 
-// Template: Crypto Orb (particles)
 function cryptoOrbMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  // create particles orbiting a center
   const N = 220;
   const pts = new Array(N).fill(0).map((_,i)=>({
     a: Math.random()*Math.PI*2,
@@ -782,17 +896,14 @@ function cryptoOrbMount(canvas){
   const runner = makeRunner((t)=>{
     const tsec = (performance.now() - t0)/1000;
     ctx.clearRect(0,0,W,H);
-    // dark background
     ctx.fillStyle = 'rgba(0,0,0,0.96)';
     ctx.fillRect(0,0,W,H);
-    // orb glow
     const cx = W/2, cy = H/2;
     const grd = ctx.createRadialGradient(cx,cy,10,cx,cy,260);
     grd.addColorStop(0, 'rgba(0,200,255,0.08)');
     grd.addColorStop(0.45, 'rgba(176,67,255,0.03)');
     grd.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = grd; ctx.fillRect(0,0,W,H);
-    // particle trails
     ctx.globalCompositeOperation = 'lighter';
     for(let i=0;i<N;i++){
       const p = pts[i];
@@ -807,24 +918,18 @@ function cryptoOrbMount(canvas){
       ctx.fill();
     }
     ctx.globalCompositeOperation = 'source-over';
-    // center orb
     ctx.beginPath();
     ctx.fillStyle = 'rgba(0,240,255,0.06)';
     ctx.arc(cx, cy, 62 + Math.sin(tsec*0.8)*6, 0, Math.PI*2);
     ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.08)';
-    ctx.font = '13px Rajdhani';
-    ctx.fillText('Orbit • Chain Energy', 30, H-28);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: Retro Terminal (text stream)
 function retroTerminalMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  // setup lines
   const lines = Array.from({length:30}, ()=> '');
   const ch = 18;
   function randomLine(){
@@ -840,31 +945,20 @@ function retroTerminalMount(canvas){
   const runner = makeRunner((t)=>{
     ctx.fillStyle = 'rgba(0,0,0,0.98)';
     ctx.fillRect(0,0,W,H);
-    // background slight green glow
-    const grd = ctx.createLinearGradient(0,0,0,H);
-    grd.addColorStop(0,'rgba(0,0,0,0)');
-    grd.addColorStop(1,'rgba(0,0,0,0.02)');
-    ctx.fillStyle = grd; ctx.fillRect(0,0,W,H);
-    // push lines occasionally
     if(Math.random() < 0.28){
       lines.pop();
       lines.unshift(randomLine());
     }
-    // draw text
     ctx.font = '16px "Courier New", monospace';
     for(let i=0;i<lines.length;i++){
       const y = 60 + i*ch;
       ctx.fillStyle = (i===0)? 'rgba(0,255,140,0.85)' : 'rgba(0,255,140,0.22)';
       ctx.fillText(lines[i], 22, y);
     }
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Retro Terminal', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: Zen Space
 function zenSpaceMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -872,17 +966,14 @@ function zenSpaceMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = t/1000;
     s = Math.sin(tt*0.12)*0.5 + 0.5;
-    // soft gradient
     const g = ctx.createLinearGradient(0,0,W,H);
     g.addColorStop(0, `rgba(34,36,40,${0.16 + s*0.04})`);
     g.addColorStop(1, `rgba(8,10,12,0.98)`);
     ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
-    // large soft circle
     ctx.beginPath();
     ctx.fillStyle = `rgba(176,67,255,${0.04 + s*0.06})`;
     ctx.arc(W/2, H/2 - 20, 220 + s*20, 0, Math.PI*2);
     ctx.fill();
-    // slow floating lines
     ctx.strokeStyle = 'rgba(255,255,255,0.02)';
     ctx.lineWidth = 1.2;
     for(let i=0;i<5;i++){
@@ -891,34 +982,26 @@ function zenSpaceMount(canvas){
       ctx.ellipse(W/2, H/2 + off, 200 - i*30, 60, Math.PI/6, 0, Math.PI*2);
       ctx.stroke();
     }
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Zen Space', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: Pic Frame (user image)
 function picFrameMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let running = true;
   let img = null;
-  let fitMode = 'cover'; // cover or contain
-  // initial placeholder
+  let fitMode = 'cover';
   const runner = makeRunner((t)=>{
     if(!running) return;
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle = '#070708';
     ctx.fillRect(0,0,W,H);
-    // frame glow
     ctx.save();
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.fillRect(36,36,W-72,H-72);
     ctx.restore();
-    // draw image if any
     if(img && img.complete){
-      // draw with cover fit
       const iw = img.width, ih = img.height;
       let sx=0,sy=0,sw=iw,sh=ih;
       if(fitMode === 'cover'){
@@ -927,7 +1010,6 @@ function picFrameMount(canvas){
         const dx = (W - dw)/2, dy = (H - dh)/2;
         ctx.drawImage(img, 0,0,iw,ih, dx, dy, dw, dh);
       } else {
-        // contain
         const scale = Math.min((W-120)/iw, (H-120)/ih);
         const dw = iw*scale, dh = ih*scale;
         const dx = (W - dw)/2, dy = (H - dh)/2;
@@ -943,13 +1025,9 @@ function picFrameMount(canvas){
       ctx.fillStyle = 'rgba(255,255,255,0.04)';
       ctx.fillText('Upload image or enter image URL', W/2 - 110, H/2 + 16);
     }
-    // frame border
     ctx.strokeStyle = 'rgba(0,240,255,0.06)';
     ctx.lineWidth = 2;
     ctx.strokeRect(30,30,W-60,H-60);
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Pic Frame', 30, H-28);
   });
 
   return {
@@ -976,7 +1054,6 @@ function picFrameMount(canvas){
   };
 }
 
-// Template: Liquid Waves (simple sine waves)
 function liquidWavesMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -984,9 +1061,7 @@ function liquidWavesMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now() - t0)/1000;
     ctx.clearRect(0,0,W,H);
-    // dark base
     ctx.fillStyle = '#040405'; ctx.fillRect(0,0,W,H);
-    // waves
     for(let k=0;k<4;k++){
       ctx.beginPath();
       const amp = 12 + k*8;
@@ -999,20 +1074,16 @@ function liquidWavesMount(canvas){
       ctx.lineWidth = 1.8;
       ctx.stroke();
     }
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Liquid Waves', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: Matrix Rain
 function matrixRainMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   const cols = Math.floor(W/14);
   const drops = new Array(cols).fill(0).map(()=>Math.floor(Math.random()*H));
-  const letters = '01'; // binary rain
+  const letters = '01';
   let running = true;
   const runner = makeRunner((t)=>{
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
@@ -1026,14 +1097,10 @@ function matrixRainMount(canvas){
       drops[i] += 14 + Math.random()*10;
       if(drops[i] > H + 20) drops[i] = -20*Math.random();
     }
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Matrix Rain', 24, H-24);
   });
   return { unmount(){ running=false; runner.stop(); } };
 }
 
-// Template: HexGrid Pulse
 function hexGridPulseMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -1053,7 +1120,6 @@ function hexGridPulseMount(canvas){
         const pulse = 0.6 + 0.4*Math.sin(d*0.06 - tt*2);
         const a = 0.03 + 0.06*(1-pulse);
         ctx.beginPath();
-        // hexagon
         ctx.moveTo(px + size*0.5, py);
         for(let k=1;k<6;k++){
           const ang = (Math.PI*2/6)*k;
@@ -1065,14 +1131,10 @@ function hexGridPulseMount(canvas){
       }
     }
     ctx.restore();
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Hex Grid Pulse', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: Clock Sync
 function clockSyncMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -1081,12 +1143,10 @@ function clockSyncMount(canvas){
     ctx.fillStyle = '#010101'; ctx.fillRect(0,0,W,H);
     const now = new Date();
     const s = now.getSeconds(), m = now.getMinutes(), hr = now.getHours()%12;
-    // dial
     ctx.save();
     ctx.translate(W/2, H/2);
     ctx.beginPath(); ctx.arc(0,0,220,0,Math.PI*2);
     ctx.fillStyle = 'rgba(255,255,255,0.02)'; ctx.fill();
-    // ticks
     for(let i=0;i<60;i++){
       const ang = i*(Math.PI*2/60) - Math.PI/2;
       const r1 = 200, r2 = (i%5===0 ? 190 : 194);
@@ -1097,28 +1157,20 @@ function clockSyncMount(canvas){
       ctx.lineTo(Math.cos(ang)*r2, Math.sin(ang)*r2);
       ctx.stroke();
     }
-    // hands
     const angS = s*(Math.PI*2/60) - Math.PI/2;
     const angM = (m + s/60)*(Math.PI*2/60) - Math.PI/2;
     const angH = (hr + m/60)*(Math.PI*2/12) - Math.PI/2;
-    // hour
     ctx.strokeStyle = 'rgba(176,67,255,0.9)'; ctx.lineWidth=6;
     ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(angH)*110, Math.sin(angH)*110); ctx.stroke();
-    // minute
     ctx.strokeStyle = 'rgba(0,240,255,0.96)'; ctx.lineWidth=4;
     ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(angM)*150, Math.sin(angM)*150); ctx.stroke();
-    // second
     ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth=1.6;
     ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(angS)*180, Math.sin(angS)*180); ctx.stroke();
     ctx.restore();
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.font = '12px Rajdhani';
-    ctx.fillText('Clock Sync — UTC '+now.toUTCString().split(' ')[4], 24, H-24);
   });
   return { unmount(){ running=false; runner.stop(); } };
 }
 
-// Template: Code Verse
 function codeVerseMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -1141,13 +1193,10 @@ function codeVerseMount(canvas){
     for(let i=0;i<lines.length;i++){
       ctx.fillText(lines[i], 22, 60 + i*20);
     }
-    ctx.fillStyle = 'rgba(255,255,255,0.04)';
-    ctx.fillText('Code Verse', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: AI Bloom (simple fractal-ish)
 function aiBloomMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -1155,7 +1204,6 @@ function aiBloomMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#050507'; ctx.fillRect(0,0,W,H);
-    // draw radial expanding petals
     ctx.save();
     ctx.translate(W/2, H/2);
     for(let k=0;k<18;k++){
@@ -1168,13 +1216,10 @@ function aiBloomMount(canvas){
       ctx.fill();
     }
     ctx.restore();
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fillText('AI Bloom', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Template: Signature Loop (flowing lines)
 function signatureLoopMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -1205,13 +1250,521 @@ function signatureLoopMount(canvas){
       ctx.stroke();
     }
     ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fillText('Signature Loop', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
 
-// Collect templates mapping
+function neonCityMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const buildings = Array.from({length:20}, ()=>({
+    x: Math.random()*W,
+    h: 100 + Math.random()*300,
+    w: 40 + Math.random()*60,
+    color: Math.random() > 0.5 ? 'rgba(255,0,255,0.6)' : 'rgba(0,240,255,0.6)'
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    for(let i=0;i<buildings.length;i++){
+      const b = buildings[i];
+      const flicker = 0.8 + Math.sin(tt*3 + i)*0.2;
+      ctx.fillStyle = b.color.replace('0.6', (0.3*flicker).toString());
+      ctx.fillRect(b.x, H-b.h, b.w, b.h);
+      ctx.strokeStyle = b.color;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(b.x, H-b.h, b.w, b.h);
+      for(let j=0;j<5;j++){
+        if(Math.random() > 0.3){
+          ctx.fillStyle = 'rgba(255,255,200,0.4)';
+          ctx.fillRect(b.x + 10, H-b.h + 20 + j*40, 10, 10);
+        }
+      }
+    }
+    ctx.fillStyle = 'rgba(255,0,255,0.3)';
+    ctx.fillRect(0, H-10, W, 10);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function glitchArtMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    if(Math.random() > 0.7){
+      const slices = 10 + Math.floor(Math.random()*20);
+      for(let i=0;i<slices;i++){
+        const y = Math.random()*H;
+        const h = 5 + Math.random()*30;
+        const offset = (Math.random()-0.5)*50;
+        ctx.fillStyle = `rgba(${Math.random()*255},${Math.random()*255},255,0.3)`;
+        ctx.fillRect(offset, y, W, h);
+      }
+    }
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = 'rgba(255,0,0,0.1)';
+    ctx.fillRect(W/2 - 100 + Math.sin(tt*2)*10, H/2 - 100, 200, 200);
+    ctx.fillStyle = 'rgba(0,255,0,0.1)';
+    ctx.fillRect(W/2 - 100, H/2 - 100 + Math.cos(tt*2)*10, 200, 200);
+    ctx.fillStyle = 'rgba(0,0,255,0.1)';
+    ctx.fillRect(W/2 - 100 - Math.sin(tt*2)*10, H/2 - 100, 200, 200);
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function vaporwaveMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    const grd = ctx.createLinearGradient(0,0,0,H);
+    grd.addColorStop(0, '#ff00ff');
+    grd.addColorStop(0.5, '#00ffff');
+    grd.addColorStop(1, '#000');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H*0.7);
+    ctx.rotate(-0.3);
+    ctx.strokeStyle = 'rgba(255,0,255,0.3)';
+    ctx.lineWidth = 2;
+    for(let i=-10;i<=10;i++){
+      const y = i*40;
+      const scale = 1 + y*0.002;
+      ctx.beginPath();
+      ctx.moveTo(-W*scale, y);
+      ctx.lineTo(W*scale, y);
+      ctx.stroke();
+    }
+    for(let i=-10;i<=10;i++){
+      ctx.beginPath();
+      ctx.moveTo(i*60, -200);
+      ctx.lineTo(i*60*1.5, 400);
+      ctx.stroke();
+    }
+    ctx.restore();
+    const sunY = H*0.3 + Math.sin(tt*0.5)*20;
+    const grd2 = ctx.createRadialGradient(W/2,sunY,0,W/2,sunY,150);
+    grd2.addColorStop(0, 'rgba(255,200,0,0.8)');
+    grd2.addColorStop(0.5, 'rgba(255,0,255,0.4)');
+    grd2.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grd2;
+    ctx.fillRect(0,0,W,H);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function hologramMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0;i<8;i++){
+      const r = 50 + i*40 + Math.sin(tt + i)*10;
+      const alpha = 0.4 - i*0.04;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(0,240,255,${alpha})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    for(let i=0;i<12;i++){
+      const ang = (i/12)*Math.PI*2 + tt*0.5;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(ang)*300, Math.sin(ang)*300);
+      ctx.strokeStyle = `rgba(0,240,255,${0.1 + Math.sin(tt + i)*0.05})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function pixelStormMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const pixels = Array.from({length:200}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*4,
+    vy: (Math.random()-0.5)*4,
+    size: 4 + Math.random()*8,
+    color: `rgb(${Math.random()*255},${Math.random()*255},255)`
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    for(let i=0;i<pixels.length;i++){
+      const p = pixels[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > W) p.vx *= -1;
+      if(p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function scanlinesMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(0,255,140,0.2)';
+    ctx.lineWidth = 1;
+    for(let y=0;y<H;y+=3){
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+    const scanY = (tt*100) % H;
+    ctx.fillStyle = 'rgba(0,255,140,0.3)';
+    ctx.fillRect(0, scanY, W, 20);
+    ctx.fillStyle = 'rgba(0,240,255,0.2)';
+    ctx.fillRect(W/2-150, H/2-150, 300, 300);
+    ctx.strokeStyle = 'rgba(0,240,255,0.6)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(W/2-150, H/2-150, 300, 300);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function dataStreamMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const streams = Array.from({length:30}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    speed: 2 + Math.random()*5,
+    data: Array.from({length:10}, ()=>Math.random().toString(2).substr(2,8))
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.font = '12px monospace';
+    for(let i=0;i<streams.length;i++){
+      const s = streams[i];
+      s.y += s.speed;
+      if(s.y > H) s.y = -100;
+      for(let j=0;j<s.data.length;j++){
+        const alpha = 0.8 - j*0.08;
+        ctx.fillStyle = `rgba(0,240,255,${alpha})`;
+        ctx.fillText(s.data[j], s.x, s.y + j*15);
+      }
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleNebulaMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const particles = Array.from({length:500}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*0.5,
+    vy: (Math.random()-0.5)*0.5,
+    size: Math.random()*3,
+    alpha: Math.random()
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = 'lighter';
+    for(let i=0;i<particles.length;i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0) p.x = W;
+      if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H;
+      if(p.y > H) p.y = 0;
+      ctx.fillStyle = `rgba(176,67,255,${p.alpha*0.5})`;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function geometricDanceMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0;i<8;i++){
+      ctx.save();
+      ctx.rotate((i/8)*Math.PI*2 + tt*0.5);
+      ctx.translate(150 + Math.sin(tt + i)*50, 0);
+      ctx.rotate(tt*2);
+      const size = 40 + Math.sin(tt*3 + i)*20;
+      ctx.strokeStyle = `rgba(0,240,255,${0.4 + Math.sin(tt + i)*0.2})`;
+      ctx.lineWidth = 3;
+      if(i % 2 === 0){
+        ctx.strokeRect(-size/2, -size/2, size, size);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, size/2, 0, Math.PI*2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function synthwaveMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    const grd = ctx.createLinearGradient(0,0,0,H);
+    grd.addColorStop(0, '#1a0033');
+    grd.addColorStop(0.5, '#330066');
+    grd.addColorStop(1, '#000');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H*0.8);
+    ctx.scale(1, 0.5);
+    ctx.strokeStyle = 'rgba(255,0,255,0.4)';
+    ctx.lineWidth = 2;
+    for(let i=-15;i<=15;i++){
+      const y = i*30 - (tt*50 % 30);
+      ctx.beginPath();
+      ctx.moveTo(-W, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+    for(let i=-10;i<=10;i++){
+      ctx.beginPath();
+      ctx.moveTo(i*60, -300);
+      ctx.lineTo(i*60, 300);
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.fillStyle = 'rgba(255,0,128,0.3)';
+    ctx.beginPath();
+    ctx.moveTo(0, H*0.6);
+    for(let x=0;x<=W;x+=20){
+      const y = H*0.6 - Math.sin(x*0.01 + tt)*50 - Math.cos(x*0.02)*30;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H);
+    ctx.lineTo(0, H);
+    ctx.fill();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalRainMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cols = Math.floor(W/20);
+  const drops = Array.from({length:cols}, ()=>({
+    y: Math.random()*H,
+    speed: 3 + Math.random()*7,
+    chars: Array.from({length:15}, ()=>String.fromCharCode(0x30A0 + Math.random()*96))
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.font = '16px monospace';
+    for(let i=0;i<cols;i++){
+      const d = drops[i];
+      d.y += d.speed;
+      if(d.y > H + 200) d.y = -200;
+      for(let j=0;j<d.chars.length;j++){
+        const alpha = 0.8 - j*0.05;
+        ctx.fillStyle = `rgba(0,255,140,${alpha})`;
+        ctx.fillText(d.chars[j], i*20, d.y + j*20);
+      }
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cosmicVoidMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const stars = Array.from({length:200}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    z: Math.random()*1000,
+    size: Math.random()*2
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    for(let i=0;i<stars.length;i++){
+      const s = stars[i];
+      s.z -= 5;
+      if(s.z <= 0) s.z = 1000;
+      const x = (s.x - W/2) * (1000/s.z) + W/2;
+      const y = (s.y - H/2) * (1000/s.z) + H/2;
+      const size = s.size * (1000/s.z);
+      const alpha = 1 - s.z/1000;
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fillRect(x, y, size, size);
+    }
+    const grd = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,200);
+    grd.addColorStop(0, 'rgba(128,0,255,0.3)');
+    grd.addColorStop(0.5, 'rgba(0,0,128,0.1)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalTreeMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawBranch(x, y, len, angle, depth, t) {
+    if(depth === 0) return;
+    const x2 = x + Math.cos(angle) * len;
+    const y2 = y + Math.sin(angle) * len;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    const alpha = 0.6 - depth*0.08;
+    ctx.strokeStyle = `rgba(0,240,255,${alpha})`;
+    ctx.lineWidth = depth;
+    ctx.stroke();
+    const angleOffset = Math.sin(t + depth)*0.2;
+    drawBranch(x2, y2, len*0.7, angle-0.5+angleOffset, depth-1, t);
+    drawBranch(x2, y2, len*0.7, angle+0.5+angleOffset, depth-1, t);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawBranch(W/2, H-50, 100, -Math.PI/2, 8, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function waveformMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    for(let layer=0;layer<5;layer++){
+      ctx.beginPath();
+      ctx.moveTo(0, H/2);
+      for(let x=0;x<=W;x+=5){
+        const y = H/2 + 
+          Math.sin((x*0.01) + tt*(1 + layer*0.2))*30 +
+          Math.cos((x*0.02) + tt*(0.5 + layer*0.1))*20 +
+          layer*15;
+        if(x===0) ctx.moveTo(x,y);
+        else ctx.lineTo(x,y);
+      }
+      ctx.strokeStyle = `rgba(0,240,255,${0.5 - layer*0.08})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(176,67,255,0.3)';
+    for(let i=0;i<50;i++){
+      const h = 50 + Math.sin(tt*3 + i*0.5)*40 + Math.random()*20;
+      ctx.fillRect(i*(W/50), H-h, W/50-2, h);
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function starfieldMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const stars = Array.from({length:300}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    size: Math.random()*2 + 0.5,
+    speed: Math.random()*0.5 + 0.1,
+    brightness: Math.random()
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,5,0.2)'; ctx.fillRect(0,0,W,H);
+    for(let i=0;i<stars.length;i++){
+      const s = stars[i];
+      s.y += s.speed;
+      if(s.y > H) {
+        s.y = 0;
+        s.x = Math.random()*W;
+      }
+      s.brightness = 0.3 + Math.sin(t*0.001 + i)*0.7;
+      ctx.fillStyle = `rgba(255,255,255,${s.brightness})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberpunkGridMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(255,0,255,0.2)';
+    ctx.lineWidth = 1;
+    const gridSize = 40;
+    for(let x=0;x<W;x+=gridSize){
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+    for(let y=0;y<H;y+=gridSize){
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+    for(let i=0;i<10;i++){
+      const x = ((tt*50 + i*100) % W);
+      const y = ((tt*30 + i*80) % H);
+      const grd = ctx.createRadialGradient(x,y,0,x,y,60);
+      grd.addColorStop(0, 'rgba(0,240,255,0.4)');
+      grd.addColorStop(1, 'rgba(0,240,255,0)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(x-60, y-60, 120, 120);
+    }
+    ctx.fillStyle = 'rgba(255,0,255,0.2)';
+    ctx.fillRect(W/2-100, H/2-100, 200, 200);
+    ctx.strokeStyle = 'rgba(0,240,255,0.8)';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(W/2-100, H/2-100, 200, 200);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
 const templates = {
   cyberMinimal: { mount: cyberMinimalMount },
   cryptoOrb: { mount: cryptoOrbMount },
@@ -1224,13 +1777,27 @@ const templates = {
   clockSync: { mount: clockSyncMount },
   codeVerse: { mount: codeVerseMount },
   aiBloom: { mount: aiBloomMount },
-  signatureLoop: { mount: signatureLoopMount }
+  signatureLoop: { mount: signatureLoopMount },
+  neonCity: { mount: neonCityMount },
+  glitchArt: { mount: glitchArtMount },
+  vaporwave: { mount: vaporwaveMount },
+  hologram: { mount: hologramMount },
+  pixelStorm: { mount: pixelStormMount },
+  scanlines: { mount: scanlinesMount },
+  dataStream: { mount: dataStreamMount },
+  particleNebula: { mount: particleNebulaMount },
+  geometricDance: { mount: geometricDanceMount },
+  synthwave: { mount: synthwaveMount },
+  digitalRain: { mount: digitalRainMount },
+  cosmicVoid: { mount: cosmicVoidMount },
+  fractalTree: { mount: fractalTreeMount },
+  waveform: { mount: waveformMount },
+  starfield: { mount: starfieldMount },
+  cyberpunkGrid: { mount: cyberpunkGridMount }
 };
 
-/* Pic Frame controls: create DOM elements for uploading/selecting image */
 function createPicControls(instance){
   const box = create('div', {class:'pic-controls'});
-  // file input
   const fileBtn = create('input', {type:'file', class:'input'});
   fileBtn.accept = 'image/*';
   fileBtn.addEventListener('change', (e)=>{
@@ -1257,10 +1824,9 @@ function createPicControls(instance){
 
   const clearBtn = create('button', {class:'btn', html:'Clear'});
   clearBtn.addEventListener('click', ()=> {
-    // easiest way: reload template -> unmount and mount fresh
     if(activeInstance && activeInstance.unmount) activeInstance.unmount();
-    const canvas = create('canvas', {width:720, height:720});
-    canvas.style.width='720px'; canvas.style.height='720px';
+    const canvas = create('canvas', {width:window.innerWidth, height:window.innerHeight});
+    canvas.style.width='100%'; canvas.style.height='100%';
     canvasWrap.innerHTML = '';
     canvasWrap.appendChild(canvas);
     const id = TEMPLATE_IDS[currentIndex];
@@ -1273,13 +1839,11 @@ function createPicControls(instance){
   return box;
 }
 
-/* Clean up when leaving page */
 window.addEventListener('beforeunload', ()=>{
   stopAutoplay();
   if(activeInstance && typeof activeInstance.unmount === 'function') activeInstance.unmount();
 });
 
-// Keyboard controls: Esc to close, ArrowRight next, ArrowLeft prev
 window.addEventListener('keydown', (e)=>{
   if(e.key === 'Escape') closeOverlay();
   if(e.key === 'ArrowRight') nextTemplate();
@@ -1289,10 +1853,8 @@ window.addEventListener('keydown', (e)=>{
   }
 });
 
-// Initialize autoplay button initial state
 autoplayToggle.classList.toggle('toggled', autoplay);
 
-// End of script
 </script>
 </body>
 </html>
