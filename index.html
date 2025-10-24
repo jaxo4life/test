@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>dGEN Town — Visual Collection for dGEN1</title>
 
-<!-- 字体 -->
+<!-- Keeping fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -39,6 +39,7 @@
   }
 
   .frame {
+ 
     background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     border-radius:12px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.02);
@@ -290,14 +291,16 @@
           <div class="logo">dGEN1</div>
           <div>
             <h1>dGEN Town</h1>
-            <p style="margin-top:4px;">精选视觉作品集 — 点击卡片进入</p>
+            <!-- Changed back to English -->
+            <p style="margin-top:4px;">Visual Collection — Click card to enter</p>
           </div>
         </div>
 
         <div class="controls">
-          <button id="autoplayToggle" class="btn" title="切换自动播放">自动播放</button>
-          <button id="randomBtn" class="btn" title="随机模板">随机</button>
-          <button id="helpBtn" class="btn" title="帮助/信息">信息</button>
+          <!-- Changed all button text to English -->
+          <button id="autoplayToggle" class="btn" title="Toggle autoplay">Autoplay</button>
+          <button id="randomBtn" class="btn" title="Random template">Random</button>
+          <button id="helpBtn" class="btn" title="Help/Info">Info</button>
         </div>
       </header>
 
@@ -316,7 +319,8 @@
 
         <div class="overlay-ui" aria-hidden="false">
           <div class="overlay-left">
-            <button id="backBtn" class="back-btn" title="返回画廊">← 返回</button>
+            <!-- Changed back button text to English -->
+            <button id="backBtn" class="back-btn" title="Back to gallery">← Back</button>
             <div class="small" id="currentLabel">—</div>
           </div>
           <div class="overlay-right" style="align-items:center">
@@ -324,13 +328,14 @@
             <div id="picControlsContainer"></div>
             <div class="bubble">
               <div class="dot" id="autoplayDot" style="display:none"></div>
-              <div class="small">自动</div>
-              <button id="nextBtn" class="btn" title="下一个模板">下一个</button>
+              <!-- Changed to English -->
+              <div class="small">Auto</div>
+              <button id="nextBtn" class="btn" title="Next template">Next</button>
             </div>
           </div>
         </div>
 
-        <div class="hint" id="overlayHint" style="display:none">点击返回</div>
+        <!-- Removed the hint overlay that said "Click to return" -->
       </div>
 
     </div>
@@ -371,18 +376,18 @@ const TEMPLATE_IDS = [
 ];
 
 const TEMPLATE_META = {
-  cyberMinimal: {name:'赛博极简'},
-  cryptoOrb: {name:'加密星球'},
-  retroTerminal: {name:'复古终端'},
-  zenSpace: {name:'禅意空间'},
-  picFrame: {name:'图片框架'},
-  liquidWaves: {name:'液态波浪'},
-  matrixRain: {name:'矩阵雨'},
-  hexGridPulse: {name:'六边网格'},
-  clockSync: {name:'时钟同步'},
-  codeVerse: {name:'代码宇宙'},
-  aiBloom: {name:'AI绽放'},
-  signatureLoop: {name:'签名循环'}
+  cyberMinimal: {name:'Cyber Minimal'},
+  cryptoOrb: {name:'Crypto Orb'},
+  retroTerminal: {name:'Retro Terminal'},
+  zenSpace: {name:'Zen Space'},
+  picFrame: {name:'Pic Frame'},
+  liquidWaves: {name:'Liquid Waves'},
+  matrixRain: {name:'Matrix Rain'},
+  hexGridPulse: {name:'Hex Grid Pulse'},
+  clockSync: {name:'Clock Sync'},
+  codeVerse: {name:'Code Verse'},
+  aiBloom: {name:'AI Bloom'},
+  signatureLoop: {name:'Signature Loop'}
 };
 
 // global controller
@@ -601,7 +606,7 @@ const autoplayDot = $('#autoplayDot');
 const picControlsContainer = $('#picControlsContainer');
 const randomBtn = $('#randomBtn');
 const helpBtn = $('#helpBtn');
-const overlayHint = $('#overlayHint');
+const overlayHint = $('#overlayHint'); // Note: This element is present in HTML but not used in JS
 
 backBtn.addEventListener('click', closeOverlay);
 autoplayToggle.addEventListener('click', ()=> {
@@ -616,7 +621,7 @@ randomBtn.addEventListener('click', ()=> {
   openTemplate(idx);
 });
 helpBtn.addEventListener('click', ()=> {
-  alert('dGEN Town — 为 dGEN1 定制的12个模板。点击卡片查看。自动播放每20秒切换一次。图片框架支持本地文件上传或图片URL。');
+  alert('dGEN Town — 12 templates for dGEN1. Click cards to view. Autoplay switches every 20s. Pic Frame supports file upload or image URL.');
 });
 
 // Auto-play functions
@@ -656,29 +661,17 @@ function openTemplate(index){
     const el = createPicControls(activeInstance);
     picControlsContainer.appendChild(el);
   }
-  overlayHint.style.display = 'block';
-  // click overlay to return
-  overlay.addEventListener('click', overlayClickHandler);
 }
 
 function closeOverlay(){
   overlay.classList.remove('active');
   overlay.setAttribute('aria-hidden','true');
-  overlayHint.style.display = 'none';
-  overlay.removeEventListener('click', overlayClickHandler);
   // unmount template
   if(activeInstance && typeof activeInstance.unmount === 'function') {
     activeInstance.unmount();
     activeInstance = null;
   }
   canvasWrap.innerHTML = '';
-}
-
-function overlayClickHandler(e){
-  // ignore clicks on controls
-  if(e.target.closest('.back-btn') || e.target.closest('.btn') || e.target.closest('.pic-controls')) return;
-  // else close
-  closeOverlay();
 }
 
 // next template
@@ -764,10 +757,9 @@ function cyberMinimalMount(canvas){
       ctx.moveTo(40, y); ctx.lineTo(w-40, y);
     }
     ctx.stroke();
-    // small footer text
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('dGEN1 • 赛博极简', 24, h-24);
+    ctx.fillText('dGEN1 • Cyber Minimal', 24, h-24);
   });
   return {
     unmount(){ runner.stop(); }
@@ -820,10 +812,9 @@ function cryptoOrbMount(canvas){
     ctx.fillStyle = 'rgba(0,240,255,0.06)';
     ctx.arc(cx, cy, 62 + Math.sin(tsec*0.8)*6, 0, Math.PI*2);
     ctx.fill();
-    // labels
     ctx.fillStyle = 'rgba(255,255,255,0.08)';
     ctx.font = '13px Rajdhani';
-    ctx.fillText('轨道 • 链能量', 30, H-28);
+    ctx.fillText('Orbit • Chain Energy', 30, H-28);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -866,10 +857,9 @@ function retroTerminalMount(canvas){
       ctx.fillStyle = (i===0)? 'rgba(0,255,140,0.85)' : 'rgba(0,255,140,0.22)';
       ctx.fillText(lines[i], 22, y);
     }
-    // hint
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('复古终端', 24, H-24);
+    ctx.fillText('Retro Terminal', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -903,7 +893,7 @@ function zenSpaceMount(canvas){
     }
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('禅意空间', 24, H-24);
+    ctx.fillText('Zen Space', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -948,19 +938,18 @@ function picFrameMount(canvas){
       ctx.fillRect(90, 120, W-180, H-240);
       ctx.fillStyle = 'rgba(255,255,255,0.06)';
       ctx.font = '16px Rajdhani';
-      ctx.fillText('图片框架', W/2 - 36, H/2 - 6);
+      ctx.fillText('Pic Frame', W/2 - 36, H/2 - 6);
       ctx.font = '12px Rajdhani';
       ctx.fillStyle = 'rgba(255,255,255,0.04)';
-      ctx.fillText('上传图片或输入图片URL', W/2 - 110, H/2 + 16);
+      ctx.fillText('Upload image or enter image URL', W/2 - 110, H/2 + 16);
     }
     // frame border
     ctx.strokeStyle = 'rgba(0,240,255,0.06)';
     ctx.lineWidth = 2;
     ctx.strokeRect(30,30,W-60,H-60);
-    // label
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('图片框架', 30, H-28);
+    ctx.fillText('Pic Frame', 30, H-28);
   });
 
   return {
@@ -978,7 +967,7 @@ function picFrameMount(canvas){
       const im = new Image();
       im.crossOrigin = 'anonymous';
       im.onload = ()=> { img = im; };
-      im.onerror = ()=> { alert('无法加载图片,请检查 URL 或跨域策略'); };
+      im.onerror = ()=> { alert('Unable to load image, please check URL or CORS policy'); };
       im.src = url;
     },
     toggleFit(){
@@ -1010,10 +999,9 @@ function liquidWavesMount(canvas){
       ctx.lineWidth = 1.8;
       ctx.stroke();
     }
-    // center label
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('液态波浪', 24, H-24);
+    ctx.fillText('Liquid Waves', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -1040,7 +1028,7 @@ function matrixRainMount(canvas){
     }
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('矩阵雨', 24, H-24);
+    ctx.fillText('Matrix Rain', 24, H-24);
   });
   return { unmount(){ running=false; runner.stop(); } };
 }
@@ -1079,7 +1067,7 @@ function hexGridPulseMount(canvas){
     ctx.restore();
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('六边网格', 24, H-24);
+    ctx.fillText('Hex Grid Pulse', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -1123,10 +1111,9 @@ function clockSyncMount(canvas){
     ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth=1.6;
     ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(angS)*180, Math.sin(angS)*180); ctx.stroke();
     ctx.restore();
-    // bottom label
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
     ctx.font = '12px Rajdhani';
-    ctx.fillText('时钟同步 — UTC '+now.toUTCString().split(' ')[4], 24, H-24);
+    ctx.fillText('Clock Sync — UTC '+now.toUTCString().split(' ')[4], 24, H-24);
   });
   return { unmount(){ running=false; runner.stop(); } };
 }
@@ -1155,7 +1142,7 @@ function codeVerseMount(canvas){
       ctx.fillText(lines[i], 22, 60 + i*20);
     }
     ctx.fillStyle = 'rgba(255,255,255,0.04)';
-    ctx.fillText('代码宇宙', 24, H-24);
+    ctx.fillText('Code Verse', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -1182,7 +1169,7 @@ function aiBloomMount(canvas){
     }
     ctx.restore();
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fillText('AI绽放', 24, H-24);
+    ctx.fillText('AI Bloom', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -1219,7 +1206,7 @@ function signatureLoopMount(canvas){
     }
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = 'rgba(255,255,255,0.06)';
-    ctx.fillText('签名循环', 24, H-24);
+    ctx.fillText('Signature Loop', 24, H-24);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -1252,8 +1239,7 @@ function createPicControls(instance){
   });
   box.appendChild(fileBtn);
 
-  // url input
-  const urlInput = create('input', {type:'text', placeholder:'输入图片URL', class:'input'});
+  const urlInput = create('input', {type:'text', placeholder:'Enter image URL', class:'input'});
   urlInput.style.width = '220px';
   urlInput.addEventListener('keydown', (e)=>{
     if(e.key === 'Enter'){
@@ -1263,15 +1249,13 @@ function createPicControls(instance){
   });
   box.appendChild(urlInput);
 
-  // fit toggle
-  const fitBtn = create('button', {class:'btn', html:'切换适配'});
+  const fitBtn = create('button', {class:'btn', html:'Toggle Fit'});
   fitBtn.addEventListener('click', ()=>{
     if(typeof instance.toggleFit === 'function') instance.toggleFit();
   });
   box.appendChild(fitBtn);
 
-  // clear
-  const clearBtn = create('button', {class:'btn', html:'清除'});
+  const clearBtn = create('button', {class:'btn', html:'Clear'});
   clearBtn.addEventListener('click', ()=> {
     // easiest way: reload template -> unmount and mount fresh
     if(activeInstance && activeInstance.unmount) activeInstance.unmount();
@@ -1312,4 +1296,3 @@ autoplayToggle.classList.toggle('toggled', autoplay);
 </script>
 </body>
 </html>
-
