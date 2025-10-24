@@ -16,6 +16,8 @@
     --glass: rgba(255,255,255,0.04);
     --text: rgba(255,255,255,0.9);
     --small: 12px;
+    /* 添加动态视口高度变量 */
+    --vh: 1vh;
   }
   html,body{
     height:100%;
@@ -26,11 +28,16 @@
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
     overflow:hidden;
+    /* 防止移动端滚动 */
+    position: fixed;
+    width: 100%;
   }
 
   .stage {
     width:100vw;
-    height:100vh;
+    /* 使用动态视口高度和CSS变量 */
+    height: 100dvh;
+    height: calc(var(--vh, 1vh) * 100);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -314,6 +321,20 @@
   </div>
 
 <script>
+function setVH() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// 初始设置
+setVH();
+
+// 监听窗口大小变化和方向变化
+window.addEventListener('resize', setVH);
+window.addEventListener('orientationchange', () => {
+  setTimeout(setVH, 100);
+});
+
 const $ = sel => document.querySelector(sel);
 const create = (tag, attrs={}, parent=null) => {
   const el = document.createElement(tag);
