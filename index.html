@@ -272,10 +272,9 @@
 
       <header>
         <div class="title">
-          <div class="logo">dGEN1</div>
+          <div class="logo">dGEN Town</div>
           <div>
-            <h1>dGEN Town</h1>
-            <p style="margin-top:4px;">Visual Collection — Click card to enter</p>
+            <p style="margin-top:4px;">Visual Collection for dGEN1</p>
           </div>
         </div>
 
@@ -327,7 +326,7 @@ const create = (tag, attrs={}, parent=null) => {
 
 const TEMPLATE_IDS = [
   'cyberMinimal','cryptoOrb','retroTerminal','zenSpace',
-  'picFrame','liquidWaves','matrixRain','hexGridPulse',
+  'liquidWaves','matrixRain','hexGridPulse',
   'clockSync','codeVerse','aiBloom','signatureLoop',
   'neonCity','glitchArt','vaporwave','hologram',
   'pixelStorm','scanlines','dataStream','particleNebula',
@@ -340,7 +339,7 @@ const TEMPLATE_META = {
   cryptoOrb: {name:'Crypto Orb'},
   retroTerminal: {name:'Retro Terminal'},
   zenSpace: {name:'Zen Space'},
-  picFrame: {name:'Pic Frame'},
+  <!-- picFrame: {name:'Pic Frame'}, -->
   liquidWaves: {name:'Liquid Waves'},
   matrixRain: {name:'Matrix Rain'},
   hexGridPulse: {name:'Hex Grid Pulse'},
@@ -985,73 +984,73 @@ function zenSpaceMount(canvas){
   return { unmount(){ runner.stop(); } };
 }
 
-function picFrameMount(canvas){
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  let running = true;
-  let img = null;
-  let fitMode = 'cover';
-  const runner = makeRunner((t)=>{
-    if(!running) return;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle = '#070708';
-    ctx.fillRect(0,0,W,H);
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(36,36,W-72,H-72);
-    ctx.restore();
-    if(img && img.complete){
-      const iw = img.width, ih = img.height;
-      let sx=0,sy=0,sw=iw,sh=ih;
-      if(fitMode === 'cover'){
-        const scale = Math.max((W-120)/iw, (H-120)/ih);
-        const dw = iw*scale, dh = ih*scale;
-        const dx = (W - dw)/2, dy = (H - dh)/2;
-        ctx.drawImage(img, 0,0,iw,ih, dx, dy, dw, dh);
-      } else {
-        const scale = Math.min((W-120)/iw, (H-120)/ih);
-        const dw = iw*scale, dh = ih*scale;
-        const dx = (W - dw)/2, dy = (H - dh)/2;
-        ctx.drawImage(img, 0,0,iw,ih, dx, dy, dw, dh);
-      }
-    } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.02)';
-      ctx.fillRect(90, 120, W-180, H-240);
-      ctx.fillStyle = 'rgba(255,255,255,0.06)';
-      ctx.font = '16px Rajdhani';
-      ctx.fillText('Pic Frame', W/2 - 36, H/2 - 6);
-      ctx.font = '12px Rajdhani';
-      ctx.fillStyle = 'rgba(255,255,255,0.04)';
-      ctx.fillText('Upload image or enter image URL', W/2 - 110, H/2 + 16);
-    }
-    ctx.strokeStyle = 'rgba(0,240,255,0.06)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(30,30,W-60,H-60);
-  });
+<!-- function picFrameMount(canvas){ -->
+  <!-- const ctx = canvas.getContext('2d'); -->
+  <!-- const W = canvas.width, H = canvas.height; -->
+  <!-- let running = true; -->
+  <!-- let img = null; -->
+  <!-- let fitMode = 'cover'; -->
+  <!-- const runner = makeRunner((t)=>{ -->
+    <!-- if(!running) return; -->
+    <!-- ctx.clearRect(0,0,W,H); -->
+    <!-- ctx.fillStyle = '#070708'; -->
+    <!-- ctx.fillRect(0,0,W,H); -->
+    <!-- ctx.save(); -->
+    <!-- ctx.fillStyle = 'rgba(0,0,0,0.5)'; -->
+    <!-- ctx.fillRect(36,36,W-72,H-72); -->
+    <!-- ctx.restore(); -->
+    <!-- if(img && img.complete){ -->
+      <!-- const iw = img.width, ih = img.height; -->
+      <!-- let sx=0,sy=0,sw=iw,sh=ih; -->
+      <!-- if(fitMode === 'cover'){ -->
+        <!-- const scale = Math.max((W-120)/iw, (H-120)/ih); -->
+        <!-- const dw = iw*scale, dh = ih*scale; -->
+        <!-- const dx = (W - dw)/2, dy = (H - dh)/2; -->
+        <!-- ctx.drawImage(img, 0,0,iw,ih, dx, dy, dw, dh); -->
+      <!-- } else { -->
+        <!-- const scale = Math.min((W-120)/iw, (H-120)/ih); -->
+        <!-- const dw = iw*scale, dh = ih*scale; -->
+        <!-- const dx = (W - dw)/2, dy = (H - dh)/2; -->
+        <!-- ctx.drawImage(img, 0,0,iw,ih, dx, dy, dw, dh); -->
+      <!-- } -->
+    <!-- } else { -->
+      <!-- ctx.fillStyle = 'rgba(255,255,255,0.02)'; -->
+      <!-- ctx.fillRect(90, 120, W-180, H-240); -->
+      <!-- ctx.fillStyle = 'rgba(255,255,255,0.06)'; -->
+      <!-- ctx.font = '16px Rajdhani'; -->
+      <!-- ctx.fillText('Pic Frame', W/2 - 36, H/2 - 6); -->
+      <!-- ctx.font = '12px Rajdhani'; -->
+      <!-- ctx.fillStyle = 'rgba(255,255,255,0.04)'; -->
+      <!-- ctx.fillText('Upload image or enter image URL', W/2 - 110, H/2 + 16); -->
+    <!-- } -->
+    <!-- ctx.strokeStyle = 'rgba(0,240,255,0.06)'; -->
+    <!-- ctx.lineWidth = 2; -->
+    <!-- ctx.strokeRect(30,30,W-60,H-60); -->
+  <!-- }); -->
 
-  return {
-    unmount(){ running=false; runner.stop(); },
-    setImageFromFile(file){
-      const reader = new FileReader();
-      reader.onload = e=>{
-        const im = new Image();
-        im.onload = ()=> { img = im; };
-        im.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    },
-    setImageFromURL(url){
-      const im = new Image();
-      im.crossOrigin = 'anonymous';
-      im.onload = ()=> { img = im; };
-      im.onerror = ()=> { alert('Unable to load image, please check URL or CORS policy'); };
-      im.src = url;
-    },
-    toggleFit(){
-      fitMode = (fitMode === 'cover') ? 'contain' : 'cover';
-    }
-  };
-}
+  <!-- return { -->
+    <!-- unmount(){ running=false; runner.stop(); }, -->
+    <!-- setImageFromFile(file){ -->
+      <!-- const reader = new FileReader(); -->
+      <!-- reader.onload = e=>{ -->
+        <!-- const im = new Image(); -->
+        <!-- im.onload = ()=> { img = im; }; -->
+        <!-- im.src = e.target.result; -->
+      <!-- }; -->
+      <!-- reader.readAsDataURL(file); -->
+    <!-- }, -->
+    <!-- setImageFromURL(url){ -->
+      <!-- const im = new Image(); -->
+      <!-- im.crossOrigin = 'anonymous'; -->
+      <!-- im.onload = ()=> { img = im; }; -->
+      <!-- im.onerror = ()=> { alert('Unable to load image, please check URL or CORS policy'); }; -->
+      <!-- im.src = url; -->
+    <!-- }, -->
+    <!-- toggleFit(){ -->
+      <!-- fitMode = (fitMode === 'cover') ? 'contain' : 'cover'; -->
+    <!-- } -->
+  <!-- }; -->
+<!-- } -->
 
 function liquidWavesMount(canvas){
   const ctx = canvas.getContext('2d');
@@ -1069,7 +1068,7 @@ function liquidWavesMount(canvas){
         const y = H/2 + Math.sin((x*0.02) + tt*(0.6 + k*0.12) + k)*amp*Math.cos(k*0.2);
         ctx.lineTo(x,y + k*8);
       }
-      ctx.strokeStyle = `rgba(0,240,255,${0.04 + k*0.02})`;
+      ctx.strokeStyle = `rgba(0,240,255,${0.8 - k*0.05})`;
       ctx.lineWidth = 1.8;
       ctx.stroke();
     }
@@ -1090,7 +1089,7 @@ function matrixRainMount(canvas){
     ctx.font = '14px monospace';
     for(let i=0;i<cols;i++){
       const x = i*14;
-      ctx.fillStyle = 'rgba(0,255,140,0.08)';
+      ctx.fillStyle = 'rgba(0,255,140,0.5)';
       const text = letters[Math.floor(Math.random()*letters.length)];
       ctx.fillText(text, x, drops[i]);
       drops[i] += 14 + Math.random()*10;
@@ -1188,7 +1187,7 @@ function codeVerseMount(canvas){
       lines.unshift(snippets[Math.floor(Math.random()*snippets.length)]);
     }
     ctx.font = '14px "Courier New", monospace';
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
     for(let i=0;i<lines.length;i++){
       ctx.fillText(lines[i], 22, 60 + i*20);
     }
@@ -1451,7 +1450,7 @@ function dataStreamMount(canvas){
   const streams = Array.from({length:30}, ()=>({
     x: Math.random()*W,
     y: Math.random()*H,
-    speed: 2 + Math.random()*5,
+    speed: 1 + Math.random()*3,
     data: Array.from({length:10}, ()=>Math.random().toString(2).substr(2,8))
   }));
   const runner = makeRunner((t)=>{
@@ -1769,7 +1768,7 @@ const templates = {
   cryptoOrb: { mount: cryptoOrbMount },
   retroTerminal: { mount: retroTerminalMount },
   zenSpace: { mount: zenSpaceMount },
-  picFrame: { mount: picFrameMount },
+  <!-- picFrame: { mount: picFrameMount }, -->
   liquidWaves: { mount: liquidWavesMount },
   matrixRain: { mount: matrixRainMount },
   hexGridPulse: { mount: hexGridPulseMount },
