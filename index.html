@@ -5251,33 +5251,87 @@ function particleStormMount(canvas){
   return { unmount(){ runner.stop(); } };
 }
 
-function cyberSphereMount(canvas){
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
+function cyberSphereMount(canvas) {
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width,
+    H = canvas.height;
   let t0 = performance.now();
-  const runner = makeRunner((t)=>{
-    const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+
+  const runner = makeRunner(() => {
+    const tt = (performance.now() - t0) / 1000;
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, W, H);
     ctx.save();
-    ctx.translate(W/2, H/2);
-    for(let lat=-90; lat<=90; lat+=15){
+    ctx.translate(W / 2, H / 2);
+
+    const baseR = 140 + Math.sin(tt * 1.5) * 10;
+    const rot = tt * 0.6;
+    const glow = 0.4 + Math.sin(tt * 2.5) * 0.3;
+
+    const grad = ctx.createLinearGradient(-W / 2, -H / 2, W / 2, H / 2);
+    grad.addColorStop(0, `rgba(0,255,255,${0.6 + glow * 0.2})`);
+    grad.addColorStop(0.5, `rgba(0,100,255,${0.4 + glow * 0.3})`);
+    grad.addColorStop(1, `rgba(0,255,180,${0.6 + glow * 0.2})`);
+    ctx.strokeStyle = grad;
+
+    for (let lat = -80; lat <= 80; lat += 10) {
+      const latRad = (lat * Math.PI) / 180;
+      const r = baseR * Math.cos(latRad);
+      const y = baseR * Math.sin(latRad);
       ctx.beginPath();
-      for(let lon=0; lon<=360; lon+=5){
-        const latRad = lat*Math.PI/180;
-        const lonRad = (lon + tt*30)*Math.PI/180;
-        const r = 150;
-        const x = Math.cos(latRad)*Math.cos(lonRad)*r;
-        const y = Math.cos(latRad)*Math.sin(lonRad)*r;
-        if(lon===0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+      for (let lon = 0; lon <= 360; lon += 5) {
+        const lonRad = ((lon + tt * 40) * Math.PI) / 180;
+        const x = Math.cos(lonRad + rot) * r;
+        const z = Math.sin(lonRad + rot) * r;
+        const scale = 0.8 + z / baseR / 2;
+        if (lon === 0) ctx.moveTo(x * scale, y * scale);
+        else ctx.lineTo(x * scale, y * scale);
       }
-      ctx.strokeStyle = 'rgba(0,240,255,0.4)';
       ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.4 + Math.cos(tt * 5 + latRad) * 0.2;
       ctx.stroke();
     }
+
+    for (let lon = 0; lon < 360; lon += 15) {
+      ctx.beginPath();
+      for (let lat = -90; lat <= 90; lat += 5) {
+        const latRad = (lat * Math.PI) / 180;
+        const lonRad = ((lon + tt * 40) * Math.PI) / 180;
+        const x = Math.cos(latRad) * Math.cos(lonRad + rot) * baseR;
+        const y = Math.sin(latRad) * baseR;
+        const z = Math.cos(latRad) * Math.sin(lonRad + rot) * baseR;
+        const scale = 0.8 + z / baseR / 2;
+        if (lat === -90) ctx.moveTo(x * scale, y * scale);
+        else ctx.lineTo(x * scale, y * scale);
+      }
+      ctx.lineWidth = 0.8;
+      ctx.globalAlpha = 0.25 + Math.sin(tt * 3 + lon) * 0.15;
+      ctx.stroke();
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const angle = tt * 1.5 + i * 2;
+      const x1 = Math.cos(angle) * baseR * 0.5;
+      const y1 = Math.sin(angle * 1.2) * baseR * 0.5;
+      const x2 = -x1;
+      const y2 = -y1;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.quadraticCurveTo(
+        Math.sin(tt * 3 + i) * 50,
+        Math.cos(tt * 2 + i) * 50,
+        x2,
+        y2
+      );
+      ctx.lineWidth = 1.5 + Math.sin(tt * 5 + i) * 0.5;
+      ctx.strokeStyle = `rgba(0,255,255,${0.4 + Math.sin(tt * 10 + i) * 0.4})`;
+      ctx.stroke();
+    }
+
     ctx.restore();
   });
-  return { unmount(){ runner.stop(); } };
+
+  return { unmount() { runner.stop(); } };
 }
 
 function quantumBurstMount(canvas){
