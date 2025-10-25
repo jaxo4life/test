@@ -853,14 +853,14 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'liquidMetal':
-				const particleCount1 = 30;
+				const particleCount1 = 50;
 				const tt = performance.now()/1000;
 				for(let i=0;i<particleCount1;i++){
 					const angle = i/particleCount1*Math.PI*2 + tt*0.5;
-					const radius = 15 + Math.sin(tt*3 + i)*10;
+					const radius = 40 + Math.sin(tt*3 + i)*20;
 					const x = Math.cos(angle)*radius;
 					const y = Math.sin(angle)*radius;
-					const size = 2 + Math.random()*2;
+					const size = 3 + Math.random()*3;
 					const alpha = 0.5 + Math.random()*0.3;
 
 					const grd11 = ctx.createRadialGradient(x,y,0,x,y,size*2);
@@ -893,7 +893,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
         
       case 'quantumEntangle':
 				const particleCount = 12;
-				const radius = 50;
+				const radius = 80;
 				const particles = [];
 				for(let i=0;i<particleCount;i++){
 					const angle = (i/particleCount)*Math.PI*2;
@@ -1027,14 +1027,39 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'rippleEffect':
-        for(let j=0; j<5; j++) {
-          ctx.beginPath();
-          ctx.arc(0, 0, 20 + j*20, 0, Math.PI*2);
-          ctx.strokeStyle = `rgba(0,240,255,${0.6 - j*0.1})`;
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        }
-        break;
+				const rays = Array.from({length:20}, ()=>{
+					return {
+						angle: Math.random()*Math.PI*2,
+						length: 20 + Math.random()*80,
+						twist: Math.random()*0.5
+					};
+				});				
+				rays.forEach(r=>{
+					r.angle += Math.random()*0.1;
+					const x0 = 0;
+					const y0 = 0;
+					const x1 = x0 + Math.cos(r.angle + Math.sin(r.twist))*r.length;
+					const y1 = y0 + Math.sin(r.angle + Math.cos(r.twist))*r.length;
+					const alpha = 0.3 + Math.random()*0.5;
+					const colorR = 255;
+					const colorG = Math.floor(50 + Math.random()*200);
+					const colorB = Math.floor(200 + Math.random()*55);
+					ctx.strokeStyle = `rgba(${colorR},${colorG},${colorB},${alpha})`;
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(x0,y0);
+					ctx.lineTo(x1,y1);
+					ctx.stroke();
+				});
+				const grd13 = ctx.createRadialGradient(0,0,0,0,0,8);
+				grd13.addColorStop(0,'rgba(255,255,255,0.3)');
+				grd13.addColorStop(1,'rgba(0,0,0,0)');
+				ctx.fillStyle = grd13;
+				ctx.beginPath();
+				ctx.arc(0,0,8,0,Math.PI*2);
+				ctx.fill();
+				ctx.restore();
+				break;
         
       case 'nebulaSwirl':
         for(let j=0; j<50; j++) {
@@ -1061,27 +1086,55 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'magneticField':
-        ctx.strokeStyle = 'rgba(176,67,255,0.4)';
-        ctx.lineWidth = 2;
-        for(let j=-3; j<=3; j++) {
-          ctx.beginPath();
-          for(let t=0; t<=1; t+=0.05) {
-            const x = (t-0.5)*200;
-            const y = j*20 + Math.sin(t*Math.PI*2)*30;
-            if(t===0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-          }
-          ctx.stroke();
-        }
-        ctx.fillStyle = 'rgba(255,0,0,0.6)';
-        ctx.beginPath();
-        ctx.arc(-60, 0, 10, 0, Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(0,0,255,0.6)';
-        ctx.beginPath();
-        ctx.arc(60, 0, 10, 0, Math.PI*2);
-        ctx.fill();
-        break;
+				const tt1 = performance.now()/1000;
+				const d = 100;
+
+				const poles = [
+					{x:-d/2, y:0, baseColor:[176,67,255]},
+					{x:d/2, y:0, baseColor:[0,200,255]}
+				];
+
+				poles.forEach(p=>{
+					const radius = 10 + Math.sin(tt1*3)*3;
+					const grd12 = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,radius);
+					grd12.addColorStop(0, `rgba(${p.baseColor[0]},${p.baseColor[1]},${p.baseColor[2]},0.8)`);
+					grd12.addColorStop(0.7, `rgba(${p.baseColor[0]},${p.baseColor[1]},${p.baseColor[2]},0.3)`);
+					grd12.addColorStop(1,'rgba(0,0,0,0)');
+					ctx.fillStyle = grd12;
+					ctx.beginPath();
+					ctx.arc(p.x,p.y,radius,0,Math.PI*2);
+					ctx.fill();
+				});
+
+				const lineCount = 12;
+				for(let i=0;i<lineCount;i++){
+					const tOffset = i/lineCount*Math.PI*2;
+					const startAngle = tOffset + tt1*0.3;
+					let prevX = Math.cos(startAngle)*(d/2);
+					let prevY = Math.sin(startAngle)*(d/2);
+					for(let j=1;j<=40;j++){
+						const t = j/40;
+						const r = d + t*100;
+						const angle = startAngle + Math.sin(t*10 + tt1*3 + i)*0.5;
+						const x = Math.cos(angle)*r*0.5;
+						const y = Math.sin(angle)*r*0.5*Math.exp(-t*2)*Math.sin(i + tt1*2)*2;
+						const alpha = 0.4 + 0.6*(1-t);
+						const colorR = Math.floor(176*(1-t) + 0* t);
+						const colorG = Math.floor(67*(1-t) + 200* t);
+						const colorB = 255;
+						ctx.strokeStyle = `rgba(${colorR},${colorG},${colorB},${alpha})`;
+						ctx.lineWidth = 1*(1-t);
+						ctx.beginPath();
+						ctx.moveTo(prevX, prevY);
+						ctx.lineTo(x, y);
+						ctx.stroke();
+						prevX = x;
+						prevY = y;
+					}
+				}
+
+				ctx.restore();
+				break;
         
       case 'fiberNetwork':
         ctx.strokeStyle = 'rgba(0,240,255,0.3)';
@@ -1204,7 +1257,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
           ctx.lineWidth = 3;
           ctx.beginPath();
           ctx.moveTo(0, 0);
-          ctx.lineTo(Math.cos(ang)*100, Math.sin(ang)*100);
+          ctx.lineTo(Math.cos(ang)*200, Math.sin(ang)*200);
           ctx.stroke();
         }
         break;
@@ -1415,7 +1468,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
       case 'particleSwarm':
         for(let j=0; j<50; j++) {
           const ang = (j/50)*Math.PI*2;
-          const r = 30 + Math.sin(j*0.5)*20;
+          const r = 50 + Math.sin(j*0.5)*40;
           const x = Math.cos(ang)*r;
           const y = Math.sin(ang)*r;
           ctx.fillStyle = `rgba(0,240,255,${0.4 + Math.random()*0.4})`;
@@ -1437,7 +1490,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
         
       case 'fractalZoom':
         for(let j=0; j<6; j++) {
-          const s = 80 - j*12;
+          const s = 160 - j*12;
           ctx.strokeStyle = `rgba(176,67,255,${0.6 - j*0.08})`;
           ctx.lineWidth = 2;
           ctx.strokeRect(-s/2, -s/2, s, s);
@@ -1461,7 +1514,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
         
       case 'quantumTunnel':
         for(let j=0; j<8; j++) {
-          const s = 20 + j*15;
+          const s = 40 + j*15;
           ctx.strokeStyle = `rgba(176,67,255,${0.7 - j*0.07})`;
           ctx.lineWidth = 2;
           ctx.strokeRect(-s/2, -s/2, s, s);
@@ -1513,7 +1566,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
         ctx.beginPath();
         for(let j=0; j<150; j++) {
           const ang = j*0.15;
-          const r = j*0.5;
+          const r = j*0.6;
           const x = Math.cos(ang)*r;
           const y = Math.sin(ang)*r;
           if(j===0) ctx.moveTo(x, y);
@@ -1533,7 +1586,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
           ctx.lineWidth = 4;
           ctx.beginPath();
           ctx.moveTo(0, 0);
-          ctx.lineTo(Math.cos(ang)*80, Math.sin(ang)*80);
+          ctx.lineTo(Math.cos(ang)*160, Math.sin(ang)*160);
           ctx.stroke();
         }
         break;
@@ -2000,7 +2053,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
 					drawFern(x2,y2,len*0.8,angle-0.3,depth-1);
 					drawFern(x2,y2,len*0.6,angle+0.5,depth-1);
 				}
-				drawFern(0,100,40,-Math.PI/2,6);
+				drawFern(0,50,40,-Math.PI/2,6);
 				ctx.restore();
 				break;
 
@@ -2077,7 +2130,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
 					ctx.stroke();
 					drawSpiral(x2, y2, r * 0.83, angle + 0.5, depth - 1);
 				}
-				drawSpiral(0, 0, 35, 0, 16);
+				drawSpiral(0, -50, 35, 0, 16);
 				ctx.restore();
 				break;
 
@@ -2097,7 +2150,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
 					drawSierpinski(x+half,y,half,depth-1);
 					drawSierpinski(x+half/2,y-half*Math.sqrt(3)/2,half,depth-1);
 				}
-				drawSierpinski(-80,80,160,4);
+				drawSierpinski(-80,30,160,4);
 				ctx.restore();
 				break;
 
@@ -2144,7 +2197,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
 					drawVine(x2,y2,len*0.8,angle-0.6,depth-1);
 					drawVine(x2,y2,len*0.7,angle+0.3,depth-1);
 				}
-				drawVine(-50,50,40,0,7);
+				drawVine(-50,0,40,0,7);
 				ctx.restore();
 				break;
 
@@ -2159,7 +2212,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
 						ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
 					}
 				}
-				drawCrystal(0,0,40,0,3);
+				drawCrystal(0,0,80,0,3);
 				ctx.restore();
 				break;
 
@@ -3609,34 +3662,48 @@ function rippleEffectMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  const ripples = [];
-  const runner = makeRunner((t)=>{
-    const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
-    if(Math.random() < 0.05){
-      ripples.push({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        r: 0,
-        maxR: 100 + Math.random()*200,
-        life: 1
-      });
-    }
-    for(let i=ripples.length-1; i>=0; i--){
-      const rip = ripples[i];
-      rip.r += 3;
-      rip.life = 1 - rip.r/rip.maxR;
-      if(rip.life <= 0){
-        ripples.splice(i, 1);
-        continue;
-      }
-      ctx.beginPath();
-      ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI*2);
-      ctx.strokeStyle = `rgba(0,240,255,${rip.life*0.6})`;
-      ctx.lineWidth = 3;
-      ctx.stroke();
-    }
+  const rays = Array.from({length:60}, ()=>{
+    return {
+      angle: Math.random()*Math.PI*2,
+      length: 20 + Math.random()*100,
+      speed: 1 + Math.random()*3,
+      twist: Math.random()*0.5
+    };
   });
+
+  const runner = makeRunner(()=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,0,0.15)';
+    ctx.fillRect(0,0,W,H);
+
+    rays.forEach(r=>{
+      r.angle += r.speed*0.02;
+      r.length += Math.sin(tt*r.speed)*2;
+
+      const x0 = W/2;
+      const y0 = H/2;
+      const x1 = x0 + Math.cos(r.angle + Math.sin(tt+r.twist))*r.length;
+      const y1 = y0 + Math.sin(r.angle + Math.cos(tt+r.twist))*r.length;
+
+      const alpha = 0.3 + 0.7*Math.random();
+      const colorR = 255;
+      const colorG = Math.floor(50 + Math.random()*200);
+      const colorB = Math.floor(200 + Math.random()*55);
+
+      ctx.strokeStyle = `rgba(${colorR},${colorG},${colorB},${alpha})`;
+      ctx.lineWidth = 1 + Math.random()*2;
+      ctx.beginPath();
+      ctx.moveTo(x0,y0);
+      ctx.lineTo(x1,y1);
+      ctx.stroke();
+    });
+
+    ctx.fillStyle='rgba(255,255,255,0.05)';
+    ctx.beginPath();
+    ctx.arc(W/2,H/2,10 + Math.sin(tt*5)*5,0,Math.PI*2);
+    ctx.fill();
+  });
+
   return { unmount(){ runner.stop(); } };
 }
 
@@ -3708,34 +3775,62 @@ function magneticFieldMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  const runner = makeRunner((t)=>{
+
+  const runner = makeRunner(()=>{
     const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(0,0,0,0.1)';
+    ctx.fillRect(0,0,W,H);
     ctx.save();
-    ctx.translate(W/2, H/2);
+    ctx.translate(W/2,H/2);
+
     const d = 200;
-    ctx.fillStyle = 'rgba(255,0,0,0.8)';
-    ctx.beginPath();
-    ctx.arc(-d/2, 0, 20, 0, Math.PI*2);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(0,0,255,0.8)';
-    ctx.beginPath();
-    ctx.arc(d/2, 0, 20, 0, Math.PI*2);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(176,67,255,0.4)';
-    ctx.lineWidth = 2;
-    for(let i=-8; i<=8; i++){
+    const poles = [
+      {x:-d/2, y:0, baseColor:[176,67,255]},
+      {x:d/2, y:0, baseColor:[0,200,255]}
+    ];
+
+    poles.forEach(p=>{
+      const radius = 20 + Math.sin(tt*3)*5;
+      const grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,radius);
+      grd.addColorStop(0, `rgba(${p.baseColor[0]},${p.baseColor[1]},${p.baseColor[2]},0.9)`);
+      grd.addColorStop(0.7, `rgba(${p.baseColor[0]},${p.baseColor[1]},${p.baseColor[2]},0.3)`);
+      grd.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle = grd;
       ctx.beginPath();
-      for(let t=0; t<=1; t+=0.02){
-        const x = (t-0.5)*W*0.8;
-        const y = i*30 + Math.sin(t*Math.PI*2 + tt)*40*Math.exp(-Math.abs(i)*0.1);
-        if(t===0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+      ctx.arc(p.x,p.y,radius,0,Math.PI*2);
+      ctx.fill();
+    });
+
+    const lineCount = 16;
+    for(let i=0;i<lineCount;i++){
+      const tOffset = i/lineCount*Math.PI*2;
+      const startAngle = tOffset + tt*0.2;
+      let prevX = Math.cos(startAngle)*(d/2);
+      let prevY = Math.sin(startAngle)*(d/2);
+      for(let j=1;j<=100;j++){
+        const t = j/100;
+        const r = d + t*400;
+        const angle = startAngle + Math.sin(t*10 + tt*3 + i)*0.5;
+        const x = Math.cos(angle)*r*0.5;
+        const y = Math.sin(angle)*r*0.5*Math.exp(-t*2)*Math.sin(i + tt*2)*3;
+        const alpha = 0.4 + 0.6*(1-t);
+        const colorR = Math.floor(176*(1-t) + 0* t);
+        const colorG = Math.floor(67*(1-t) + 200* t);
+        const colorB = Math.floor(255);
+        ctx.strokeStyle = `rgba(${colorR},${colorG},${colorB},${alpha})`;
+        ctx.lineWidth = 1.5*(1-t);
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        prevX = x;
+        prevY = y;
       }
-      ctx.stroke();
     }
+
     ctx.restore();
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
