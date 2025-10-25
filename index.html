@@ -2956,7 +2956,7 @@ function blackHoleMount(canvas){
       ctx.fillStyle = `rgba(${100 + brightness*155},${50 + brightness*100},255,${0.6 + brightness*0.4})`;
       ctx.fillRect(x, y, p.size, p.size);
     }
-    for(let i=0; i<8; i++){
+    for(let i=0; i<2; i++){
       ctx.beginPath();
       ctx.arc(0, 0, 30 + i*20, 0, Math.PI*2);
       ctx.strokeStyle = `rgba(176,67,255,${0.4 - i*0.04})`;
