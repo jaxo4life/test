@@ -5581,7 +5581,11 @@ function fractalSpiralMount(canvas){
   }
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = '#000'; 
+		ctx.fillRect(0,0,W,H);
+		const size = Math.min(W, H);
+    const radius = size * 0.25;
+    const centerY = H * 0.55;
     drawSpiral(W/2, H/2, 200, tt, 30, tt);
   });
   return { unmount(){ runner.stop(); } };
