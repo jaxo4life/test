@@ -1999,15 +1999,23 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				break;
 
 			case 'fractalSpiral':
-				ctx.strokeStyle = 'rgba(255,200,0,0.4)';
-				ctx.lineWidth = 2;
-				function drawSpiral(x,y,r,angle,depth){
-					if(depth===0||r<1) return;
-					const x2=x+Math.cos(angle)*r, y2=y+Math.sin(angle)*r;
-					ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
-					drawSpiral(x2,y2,r*0.85,angle+0.5,depth-1);
+				ctx.translate(0, 0);
+				function drawSpiral(x, y, r, angle, depth) {
+					if (depth === 0 || r < 1) return;
+					const x2 = x + Math.cos(angle) * r;
+					const y2 = y + Math.sin(angle) * r;
+					const hue = (angle * 60) % 360;
+					ctx.strokeStyle = `hsla(${hue},100%,60%,${0.5 + depth * 0.02})`;
+					ctx.shadowColor = `hsla(${hue},100%,70%,0.4)`;
+					ctx.shadowBlur = 4;
+					ctx.lineWidth = 2;
+					ctx.beginPath();
+					ctx.moveTo(x, y);
+					ctx.lineTo(x2, y2);
+					ctx.stroke();
+					drawSpiral(x2, y2, r * 0.83, angle + 0.5, depth - 1);
 				}
-				drawSpiral(0,0,60,0,20);
+				drawSpiral(0, 0, 35, 0, 16);
 				ctx.restore();
 				break;
 
@@ -5492,7 +5500,7 @@ function fractalFernMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    drawFern(W/2, H-50, 120, -Math.PI/2, 9, tt);
+    drawFern(W/2, H-20, 120, -Math.PI/2, 9, tt);
   });
   return { unmount(){ runner.stop(); } };
 }
