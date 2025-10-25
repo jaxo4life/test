@@ -1632,31 +1632,52 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'cyberBloom':
-        for(let j=0; j<8; j++) {
-          const ang = (j/8)*Math.PI*2;
-          ctx.fillStyle = `rgba(255,0,255,${0.4 + j*0.03})`;
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.arc(Math.cos(ang)*50, Math.sin(ang)*50, 25, ang-0.4, ang+0.4);
-          ctx.closePath();
-          ctx.fill();
-        }
-        break;
+				const petals = 8;
+				for(let i=0; i<petals; i++){
+					const angle = (i/petals)*Math.PI*2;
+					const len = 60;
+					ctx.save();
+					ctx.rotate(angle);
+					for(let j=0; j<3; j++){
+						const scale = 1 - j*0.2;
+						const alpha = 0.4 - j*0.1;
+						const grd = ctx.createRadialGradient(len,0,0,len*0.5,0,15*scale);
+						grd.addColorStop(0, `rgba(${200 + i*5},0,${255 - i*10},${alpha})`);
+						grd.addColorStop(1, 'rgba(0,0,0,0)');
+						ctx.fillStyle = grd;
+						ctx.beginPath();
+						ctx.ellipse(len, 0, 10*scale, 25*scale, 0, 0, Math.PI*2);
+						ctx.fill();
+					}
+					ctx.restore();
+				}
+				break;
         
       case 'quantumRipples':
-        for(let j=0; j<6; j++) {
-          ctx.beginPath();
-          ctx.arc(0, 0, 15 + j*18, 0, Math.PI*2);
-          ctx.strokeStyle = `rgba(176,67,255,${0.7 - j*0.1})`;
-          ctx.lineWidth = 2;
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(0, 0, 15 + j*18 + 5, 0, Math.PI*2);
-          ctx.strokeStyle = `rgba(0,240,255,${0.5 - j*0.08})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-        }
-        break;
+				for(let i=0;i<6;i++){
+					const x = (Math.random()-0.5)*120;
+					const y = (Math.random()-0.5)*120;
+					const r = 10 + Math.random()*20;
+					const alpha = 0.4 + Math.random()*0.3;
+					const pulse = Math.sin(i + performance.now()/1000*3)*0.3;
+
+					const grd = ctx.createRadialGradient(x, y, 0, x, y, r);
+					grd.addColorStop(0, `rgba(${50 + pulse*205},${150 + pulse*100},255,${alpha})`);
+					grd.addColorStop(1, 'rgba(0,0,0,0)');
+					ctx.fillStyle = grd;
+
+					ctx.beginPath();
+					ctx.arc(x, y, r, 0, Math.PI*2);
+					ctx.fill();
+
+					ctx.strokeStyle = `rgba(0,240,255,0.2)`;
+					ctx.lineWidth = 1;
+					ctx.beginPath();
+					ctx.moveTo(0,0);
+					ctx.lineTo(x,y);
+					ctx.stroke();
+				}
+				break;
         
       case 'laserBeams':
         for(let j=0; j<8; j++) {
@@ -1675,16 +1696,24 @@ TEMPLATE_IDS.forEach((id, i)=>{
         break;
         
       case 'digitalSmoke':
-        for(let j=0; j<20; j++) {
-          const x = (Math.random()-0.5)*160;
-          const y = -80 + j*8;
-          const r = 10 + Math.random()*20;
-          ctx.fillStyle = `rgba(100,100,255,${0.3 - j*0.01})`;
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, Math.PI*2);
-          ctx.fill();
-        }
-        break;
+				const particleCount2 = 15;
+				for(let i=0;i<particleCount2;i++){
+					const angle = Math.random()*Math.PI*2;
+					const radius = 20 + Math.random()*80;
+					const x = Math.cos(angle)*radius;
+					const y = Math.sin(angle)*radius + 10;
+					const hue = 180 + Math.random()*100;
+					const alpha = 0.4 + Math.random()*0.3;
+
+					const grd14 = ctx.createRadialGradient(x,y,0,x,y,8);
+					grd14.addColorStop(0, `hsla(${hue}, 90%, 60%, ${alpha})`);
+					grd14.addColorStop(1, 'rgba(0,0,0,0)');
+					ctx.fillStyle = grd14;
+					ctx.beginPath();
+					ctx.arc(x,y,4,0,Math.PI*2);
+					ctx.fill();
+				}
+				break;
         
       case 'neonRings':
         for(let j=0; j<5; j++) {
@@ -5063,28 +5092,52 @@ function quantumRipplesMount(canvas){
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
   const ripples = [];
-  const runner = makeRunner((t)=>{
+
+  const runner = makeRunner(()=>{
     const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
-    if(Math.random() < 0.02){
-      ripples.push({x: Math.random()*W, y: Math.random()*H, r: 0, age: 0});
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillRect(0,0,W,H);
+
+    if(Math.random() < 0.08){
+      ripples.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: 0,
+        age: 0,
+        phase: Math.random()*Math.PI*2
+      });
     }
+
     for(let i=ripples.length-1; i>=0; i--){
       const rip = ripples[i];
-      rip.r += 2;
+      rip.r += 2 + Math.sin(tt*5 + rip.phase)*1.5;
       rip.age += 0.016;
-      if(rip.age > 2) {
+      if(rip.age > 2.5){
         ripples.splice(i, 1);
         continue;
       }
-      const alpha = 1 - rip.age/2;
+
+      const alpha = Math.pow(1 - rip.age/2.5, 2);
+      const pulse = Math.sin(rip.r*0.1 + tt*3 + rip.phase)*0.3;
+
+      ctx.strokeStyle = `rgba(${50 + pulse*205},${150 + pulse*100},255,${alpha})`;
+      ctx.lineWidth = 2 + pulse*2;
+
       ctx.beginPath();
-      ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI*2);
-      ctx.strokeStyle = `rgba(0,240,255,${alpha*0.6})`;
-      ctx.lineWidth = 2;
+      const segments = 60;
+      for(let s=0; s<=segments; s++){
+        const angle = (s/segments)*Math.PI*2;
+        const radius = rip.r * (0.9 + 0.1*Math.sin(s + tt*2));
+        const x = rip.x + Math.cos(angle)*radius;
+        const y = rip.y + Math.sin(angle)*radius;
+        if(s===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
       ctx.stroke();
     }
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
@@ -5124,34 +5177,46 @@ function laserBeamsMount(canvas){
 function digitalSmokeMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
-  const particles = Array.from({length:100}, ()=>({
-    x: W/2 + (Math.random()-0.5)*50,
-    y: H,
-    vx: (Math.random()-0.5)*2,
+  const particles = Array.from({length:120}, ()=>({
+    x: W/2 + (Math.random()-0.5)*80,
+    y: H + Math.random()*50,
+    vx: (Math.random()-0.5)*1.5,
     vy: -1 - Math.random()*2,
-    size: 10 + Math.random()*20,
-    alpha: 0.6
+    size: 8 + Math.random()*15,
+    alpha: 0.6 + Math.random()*0.2,
+    hue: 180 + Math.random()*100
   }));
-  const runner = makeRunner((t)=>{
-    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
-    for(let i=0; i<particles.length; i++){
-      const p = particles[i];
+
+  let t0 = performance.now();
+  const runner = makeRunner(()=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillRect(0,0,W,H);
+
+    for(let p of particles){
       p.x += p.vx;
       p.y += p.vy;
-      p.alpha -= 0.005;
-      p.size += 0.2;
+      p.size += 0.15;
+      p.alpha -= 0.003;
+
       if(p.alpha <= 0 || p.y < -50){
-        p.x = W/2 + (Math.random()-0.5)*50;
-        p.y = H;
-        p.alpha = 0.6;
-        p.size = 10 + Math.random()*20;
+        p.x = W/2 + (Math.random()-0.5)*80;
+        p.y = H + Math.random()*50;
+        p.size = 8 + Math.random()*15;
+        p.alpha = 0.6 + Math.random()*0.2;
+        p.hue = 180 + Math.random()*100;
       }
-      ctx.fillStyle = `rgba(0,240,255,${p.alpha*0.3})`;
+
+      const grd = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*2);
+      grd.addColorStop(0, `hsla(${p.hue}, 90%, 60%, ${p.alpha})`);
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grd;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
       ctx.fill();
     }
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
@@ -6229,7 +6294,7 @@ function fractalVineMount(canvas){
     ctx.lineTo(x2, y2);
     ctx.lineWidth = depth*0.8;
     const alpha = 0.6 - depth*0.05;
-    ctx.strokeStyle = `rgba(100,255,150,${alpha})`;
+    ctx.strokeStyle = `rgba(255,120,50,${alpha})`;
     ctx.stroke();
     const offset = Math.sin(t + depth)*0.2;
     drawVine(x2, y2, len*0.8, angle-0.6+offset, depth-1, t);
