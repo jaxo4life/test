@@ -2214,7 +2214,10 @@ function openTemplate(index){
 }
 
 function closeOverlay(){
-  if(autoplay) stopAutoplay();
+  if(autoplay) {
+		stopAutoplay();
+		autoplayDot.style.display = 'none';
+	}
 	
   overlay.classList.remove('active');
   overlay.setAttribute('aria-hidden','true');
