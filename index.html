@@ -5500,7 +5500,7 @@ function fractalFernMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    drawFern(W/2, H + 20, 120, -Math.PI/2, 9, tt);
+    drawFern(W/2, H+20, 120, -Math.PI/2, 9, tt);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -5663,7 +5663,7 @@ function fractalBranchMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    drawBranch(W/2, H-50, 120, -Math.PI/2, 9, tt);
+    drawBranch(W/2, H+20, 120, -Math.PI/2, 9, tt);
   });
   return { unmount(){ runner.stop(); } };
 }
@@ -5691,7 +5691,7 @@ function fractalLightningMount(canvas){
     ctx.strokeStyle = `rgba(150,200,255,${0.7+Math.sin(tt*5)*0.3})`;
     ctx.lineWidth = 3;
     for(let i=0;i<3;i++){
-      drawLightning(W/2+i*50-50, 50, W/2+i*50-50, H-50, 6, tt+i);
+      drawLightning(W/2+i*50-50, 50, W/2+i*50-50, H+20, 6, tt+i);
     }
   });
   return { unmount(){ runner.stop(); } };
@@ -5719,7 +5719,7 @@ function fractalVineMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    drawVine(100, H/2, 100, 0+Math.sin(tt)*0.3, 10, tt);
+    drawVine(100, H/2+20, 100, 0+Math.sin(tt)*0.3, 10, tt);
   });
   return { unmount(){ runner.stop(); } };
 }
