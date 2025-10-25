@@ -145,7 +145,7 @@
     cursor:pointer;
     transition:transform .25s ease, box-shadow .25s ease;
   }
-  .card:hover { transform: translateY(-8px); box-shadow: 0 14px 40px rgba(0,0,0,0.7); }
+  .card:hover { transform:translateY(-8px); box-shadow: 0 14px 40px rgba(0,0,0,0.7); }
   .card canvas { width:100%; height:100%; display:block; }
 
   .card .label {
@@ -345,7 +345,19 @@ const TEMPLATE_IDS = [
   'particleExplosion','rippleEffect','nebulaSwirl','binaryClock',
   'magneticField','fiberNetwork','quantumWave','cyberEye',
   'pulseWave','mandelbrotSet','kaleidoscope','laserShow',
-  'blackHole','circuitBoard','audioVisualizer','timeTunnel','plasmaStorm'
+  'blackHole','circuitBoard','audioVisualizer','timeTunnel','plasmaStorm',
+  'neonTunnel','gravityWell','prismRefract','quantumFoam',
+  'cyberRain','spiralMatrix','energyVortex','digitalHorizon',
+  'particleSwarm','neonPulse','fractalZoom','laserGrid',
+  'quantumTunnel','cyberWaves','plasmaRings','digitalWaterfall',
+  'neonSpiral','energyBurst','particleTrails','cyberBloom',
+  'quantumRipples','laserBeams','digitalSmoke','neonRings',
+  'energyWeb','particleDance','cyberPulse','quantumStrings',
+  'laserSpiral','digitalAurora','neonWaves','energySphere',
+  'particleFountain','cyberVortex','quantumGrid','laserPulse',
+  'digitalNebula','neonMatrix','energyFlow','particleStorm',
+  'cyberSphere','quantumBurst','laserWeb','digitalVortex',
+  'neonFlow','energyRings','particleWeb','cyberAurora'
 ];
 
 const TEMPLATE_META = {
@@ -400,7 +412,55 @@ const TEMPLATE_META = {
   circuitBoard: {name:'Circuit Board'},
   audioVisualizer: {name:'Audio Visualizer'},
   timeTunnel: {name:'Time Tunnel'},
-  plasmaStorm: {name:'Plasma Storm'}
+  plasmaStorm: {name:'Plasma Storm'},
+  neonTunnel: {name:'Neon Tunnel'},
+  gravityWell: {name:'Gravity Well'},
+  prismRefract: {name:'Prism Refraction'},
+  quantumFoam: {name:'Quantum Foam'},
+  cyberRain: {name:'Cyber Rain'},
+  spiralMatrix: {name:'Spiral Matrix'},
+  energyVortex: {name:'Energy Vortex'},
+  digitalHorizon: {name:'Digital Horizon'},
+  particleSwarm: {name:'Particle Swarm'},
+  neonPulse: {name:'Neon Pulse'},
+  fractalZoom: {name:'Fractal Zoom'},
+  laserGrid: {name:'Laser Grid'},
+  quantumTunnel: {name:'Quantum Tunnel'},
+  cyberWaves: {name:'Cyber Waves'},
+  plasmaRings: {name:'Plasma Rings'},
+  digitalWaterfall: {name:'Digital Waterfall'},
+  neonSpiral: {name:'Neon Spiral'},
+  energyBurst: {name:'Energy Burst'},
+  particleTrails: {name:'Particle Trails'},
+  cyberBloom: {name:'Cyber Bloom'},
+  quantumRipples: {name:'Quantum Ripples'},
+  laserBeams: {name:'Laser Beams'},
+  digitalSmoke: {name:'Digital Smoke'},
+  neonRings: {name:'Neon Rings'},
+  energyWeb: {name:'Energy Web'},
+  particleDance: {name:'Particle Dance'},
+  cyberPulse: {name:'Cyber Pulse'},
+  quantumStrings: {name:'Quantum Strings'},
+  laserSpiral: {name:'Laser Spiral'},
+  digitalAurora: {name:'Digital Aurora'},
+  neonWaves: {name:'Neon Waves'},
+  energySphere: {name:'Energy Sphere'},
+  particleFountain: {name:'Particle Fountain'},
+  cyberVortex: {name:'Cyber Vortex'},
+  quantumGrid: {name:'Quantum Grid'},
+  laserPulse: {name:'Laser Pulse'},
+  digitalNebula: {name:'Digital Nebula'},
+  neonMatrix: {name:'Neon Matrix'},
+  energyFlow: {name:'Energy Flow'},
+  particleStorm: {name:'Particle Storm'},
+  cyberSphere: {name:'Cyber Sphere'},
+  quantumBurst: {name:'Quantum Burst'},
+  laserWeb: {name:'Laser Web'},
+  digitalVortex: {name:'Digital Vortex'},
+  neonFlow: {name:'Neon Flow'},
+  energyRings: {name:'Energy Rings'},
+  particleWeb: {name:'Particle Web'},
+  cyberAurora: {name:'Cyber Aurora'}
 };
 
 let autoplay = false;
@@ -964,10 +1024,10 @@ TEMPLATE_IDS.forEach((id, i)=>{
         ctx.strokeStyle = 'rgba(0,240,255,0.3)';
         ctx.lineWidth = 1;
         for(let j=0; j<8; j++) {
-          const x1 = (Math.random()-0.5)*160;
-          const y1 = (Math.random()-0.5)*160;
-          const x2 = (Math.random()-0.5)*160;
-          const y2 = (Math.random()-0.5)*160;
+          const x1 = -80 + Math.random()*160;
+          const y1 = -80 + Math.random()*160;
+          const x2 = -80 + Math.random()*160;
+          const y2 = -80 + Math.random()*160;
           ctx.beginPath();
           ctx.moveTo(x1, y1);
           ctx.bezierCurveTo(x1, (y1+y2)/2, x2, (y1+y2)/2, x2, y2);
@@ -1165,6 +1225,705 @@ TEMPLATE_IDS.forEach((id, i)=>{
           grd10.addColorStop(1, 'rgba(0,0,0,0)');
           ctx.fillStyle = grd10;
           ctx.fillRect(x-15, y-15, 30, 30);
+        }
+        break;
+      case 'neonTunnel':
+        for(let j=0; j<6; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 20 + j*15, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(255,0,255,${0.6 - j*0.08})`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+        ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+        for(let j=0; j<8; j++) {
+          const ang = (j/8)*Math.PI*2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang)*100, Math.sin(ang)*100);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'gravityWell':
+        const grd11 = ctx.createRadialGradient(0,0,0,0,0,100);
+        grd11.addColorStop(0, 'rgba(0,0,0,0.9)');
+        grd11.addColorStop(0.3, 'rgba(128,0,255,0.6)');
+        grd11.addColorStop(0.7, 'rgba(0,240,255,0.3)');
+        grd11.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd11;
+        ctx.fillRect(-100,-100,200,200);
+        for(let j=0; j<20; j++) {
+          const ang = (j/20)*Math.PI*2;
+          const r = 40 + Math.random()*50;
+          ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          ctx.beginPath();
+          ctx.arc(Math.cos(ang)*r, Math.sin(ang)*r, 2, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'prismRefract':
+        const colors2 = [
+          'rgba(255,0,0,0.5)', 'rgba(255,127,0,0.5)', 'rgba(255,255,0,0.5)',
+          'rgba(0,255,0,0.5)', 'rgba(0,127,255,0.5)', 'rgba(0,0,255,0.5)', 'rgba(139,0,255,0.5)'
+        ];
+        for(let j=0; j<7; j++) {
+          ctx.fillStyle = colors2[j];
+          ctx.beginPath();
+          ctx.moveTo(-60 + j*20, -80);
+          ctx.lineTo(-50 + j*20, 80);
+          ctx.lineTo(-40 + j*20, 80);
+          ctx.lineTo(-50 + j*20, -80);
+          ctx.closePath();
+          ctx.fill();
+        }
+        break;
+        
+      case 'quantumFoam':
+        for(let j=0; j<30; j++) {
+          const x = (Math.random()-0.5)*180;
+          const y = (Math.random()-0.5)*180;
+          const r = 5 + Math.random()*15;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(176,67,255,${0.2 + Math.random()*0.3})`;
+          ctx.fill();
+          ctx.strokeStyle = `rgba(0,240,255,${0.3 + Math.random()*0.3})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'cyberRain':
+        ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+        ctx.lineWidth = 2;
+        for(let j=0; j<15; j++) {
+          const x = -100 + j*14;
+          const len = 20 + Math.random()*40;
+          ctx.beginPath();
+          ctx.moveTo(x, -100);
+          ctx.lineTo(x, -100 + len);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'spiralMatrix':
+        ctx.strokeStyle = 'rgba(0,240,255,0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for(let j=0; j<100; j++) {
+          const ang = j*0.2;
+          const r = j*0.8;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          if(j===0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        break;
+        
+      case 'energyVortex':
+        for(let j=0; j<8; j++) {
+          const ang = (j/8)*Math.PI*2;
+          ctx.strokeStyle = `rgba(255,0,255,${0.6 - j*0.05})`;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(0, 0, 20 + j*10, ang, ang + Math.PI/2);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'digitalHorizon':
+        const grd12 = ctx.createLinearGradient(0,-100,0,100);
+        grd12.addColorStop(0, 'rgba(255,0,128,0.4)');
+        grd12.addColorStop(0.5, 'rgba(0,0,0,0.8)');
+        grd12.addColorStop(1, 'rgba(0,240,255,0.4)');
+        ctx.fillStyle = grd12;
+        ctx.fillRect(-100,-100,200,200);
+        ctx.strokeStyle = 'rgba(0,240,255,0.6)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-100, 0);
+        ctx.lineTo(100, 0);
+        ctx.stroke();
+        break;
+        
+      case 'particleSwarm':
+        for(let j=0; j<50; j++) {
+          const ang = (j/50)*Math.PI*2;
+          const r = 30 + Math.sin(j*0.5)*20;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          ctx.fillStyle = `rgba(0,240,255,${0.4 + Math.random()*0.4})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 2, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'neonPulse':
+        for(let j=0; j<5; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 20 + j*18, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(255,0,255,${0.7 - j*0.12})`;
+          ctx.lineWidth = 4;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'fractalZoom':
+        for(let j=0; j<6; j++) {
+          const s = 80 - j*12;
+          ctx.strokeStyle = `rgba(176,67,255,${0.6 - j*0.08})`;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(-s/2, -s/2, s, s);
+        }
+        break;
+        
+      case 'laserGrid':
+        ctx.strokeStyle = 'rgba(255,0,0,0.5)';
+        ctx.lineWidth = 2;
+        for(let j=-4; j<=4; j++) {
+          ctx.beginPath();
+          ctx.moveTo(-100, j*25);
+          ctx.lineTo(100, j*25);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(j*25, -100);
+          ctx.lineTo(j*25, 100);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'quantumTunnel':
+        for(let j=0; j<8; j++) {
+          const s = 20 + j*15;
+          ctx.strokeStyle = `rgba(176,67,255,${0.7 - j*0.07})`;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(-s/2, -s/2, s, s);
+          ctx.rotate(Math.PI/16);
+        }
+        break;
+        
+      case 'cyberWaves':
+        ctx.strokeStyle = 'rgba(0,240,255,0.6)';
+        ctx.lineWidth = 3;
+        for(let j=0; j<4; j++) {
+          ctx.beginPath();
+          for(let x=-120; x<=120; x+=5) {
+            const y = Math.sin(x*0.08 + j*1.5)*25 + j*15 - 30;
+            if(x===-120) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'plasmaRings':
+        for(let j=0; j<6; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 15 + j*15, 0, Math.PI*2);
+          const grd13 = ctx.createRadialGradient(0,0,15+j*15-5,0,0,15+j*15+5);
+          grd13.addColorStop(0, `rgba(${100+j*20},${50+j*30},255,0)`);
+          grd13.addColorStop(0.5, `rgba(${100+j*20},${50+j*30},255,0.6)`);
+          grd13.addColorStop(1, `rgba(${100+j*20},${50+j*30},255,0)`);
+          ctx.strokeStyle = grd13;
+          ctx.lineWidth = 8;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'digitalWaterfall':
+        ctx.font = '10px monospace';
+        for(let j=0; j<12; j++) {
+          for(let k=0; k<10; k++) {
+            ctx.fillStyle = `rgba(0,240,255,${0.8 - k*0.08})`;
+            ctx.fillText(Math.random().toString(36).substr(2,1), -100 + j*18, -80 + k*18);
+          }
+        }
+        break;
+        
+      case 'neonSpiral':
+        ctx.strokeStyle = 'rgba(255,0,255,0.6)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for(let j=0; j<150; j++) {
+          const ang = j*0.15;
+          const r = j*0.5;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          if(j===0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        break;
+        
+      case 'energyBurst':
+        for(let j=0; j<16; j++) {
+          const ang = (j/16)*Math.PI*2;
+          const grd14 = ctx.createLinearGradient(0,0,Math.cos(ang)*80,Math.sin(ang)*80);
+          grd14.addColorStop(0, 'rgba(255,255,0,0.8)');
+          grd14.addColorStop(0.5, 'rgba(255,0,0,0.6)');
+          grd14.addColorStop(1, 'rgba(255,0,0,0)');
+          ctx.strokeStyle = grd14;
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang)*80, Math.sin(ang)*80);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'particleTrails':
+        for(let j=0; j<10; j++) {
+          const ang = (j/10)*Math.PI*2;
+          ctx.strokeStyle = `rgba(0,240,255,${0.6 - j*0.04})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for(let k=0; k<20; k++) {
+            const r = k*4;
+            const x = Math.cos(ang + k*0.1)*r;
+            const y = Math.sin(ang + k*0.1)*r;
+            if(k===0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'cyberBloom':
+        for(let j=0; j<8; j++) {
+          const ang = (j/8)*Math.PI*2;
+          ctx.fillStyle = `rgba(255,0,255,${0.4 + j*0.03})`;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.arc(Math.cos(ang)*50, Math.sin(ang)*50, 25, ang-0.4, ang+0.4);
+          ctx.closePath();
+          ctx.fill();
+        }
+        break;
+        
+      case 'quantumRipples':
+        for(let j=0; j<6; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 15 + j*18, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(176,67,255,${0.7 - j*0.1})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, 0, 15 + j*18 + 5, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(0,240,255,${0.5 - j*0.08})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'laserBeams':
+        for(let j=0; j<8; j++) {
+          const ang = (j/8)*Math.PI*2 + Math.PI/16;
+          const grd15 = ctx.createLinearGradient(0,0,Math.cos(ang)*100,Math.sin(ang)*100);
+          grd15.addColorStop(0, 'rgba(255,0,0,0.8)');
+          grd15.addColorStop(0.5, 'rgba(255,255,0,0.6)');
+          grd15.addColorStop(1, 'rgba(255,0,0,0)');
+          ctx.strokeStyle = grd15;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang)*100, Math.sin(ang)*100);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'digitalSmoke':
+        for(let j=0; j<20; j++) {
+          const x = (Math.random()-0.5)*160;
+          const y = -80 + j*8;
+          const r = 10 + Math.random()*20;
+          ctx.fillStyle = `rgba(100,100,255,${0.3 - j*0.01})`;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'neonRings':
+        for(let j=0; j<5; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 20 + j*20, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(255,0,255,${0.7 - j*0.1})`;
+          ctx.lineWidth = 4;
+          ctx.stroke();
+          ctx.strokeStyle = `rgba(0,240,255,${0.5 - j*0.08})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'energyWeb':
+        const nodes2 = [];
+        for(let j=0; j<10; j++) {
+          const ang = (j/10)*Math.PI*2;
+          nodes2.push({x: Math.cos(ang)*60, y: Math.sin(ang)*60});
+        }
+        ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+        ctx.lineWidth = 1;
+        for(let j=0; j<nodes2.length; j++) {
+          for(let k=j+1; k<nodes2.length; k++) {
+            ctx.beginPath();
+            ctx.moveTo(nodes2[j].x, nodes2[j].y);
+            ctx.lineTo(nodes2[k].x, nodes2[k].y);
+            ctx.stroke();
+          }
+        }
+        ctx.fillStyle = 'rgba(255,0,255,0.8)';
+        nodes2.forEach(n => {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 4, 0, Math.PI*2);
+          ctx.fill();
+        });
+        break;
+        
+      case 'particleDance':
+        for(let j=0; j<30; j++) {
+          const ang = (j/30)*Math.PI*2;
+          const r = 40 + Math.sin(j*0.8)*20;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          ctx.fillStyle = `rgba(${100 + j*5},${200 - j*3},255,0.6)`;
+          ctx.beginPath();
+          ctx.arc(x, y, 3, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'cyberPulse':
+        for(let j=0; j<4; j++) {
+          ctx.strokeStyle = `rgba(0,240,255,${0.8 - j*0.15})`;
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(0, 0, 25 + j*20, 0, Math.PI*2);
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(255,0,255,0.6)';
+        ctx.beginPath();
+        ctx.arc(0, 0, 15, 0, Math.PI*2);
+        ctx.fill();
+        break;
+        
+      case 'quantumStrings':
+        ctx.strokeStyle = 'rgba(176,67,255,0.5)';
+        ctx.lineWidth = 2;
+        for(let j=0; j<8; j++) {
+          ctx.beginPath();
+          for(let x=-100; x<=100; x+=5) {
+            const y = Math.sin(x*0.05 + j*0.8)*30 + (j-4)*15;
+            if(x===-100) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'laserSpiral':
+        const grd16 = ctx.createLinearGradient(-80,-80,80,80);
+        grd16.addColorStop(0, 'rgba(255,0,0,0.6)');
+        grd16.addColorStop(0.5, 'rgba(255,255,0,0.6)');
+        grd16.addColorStop(1, 'rgba(255,0,0,0.6)');
+        ctx.strokeStyle = grd16;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        for(let j=0; j<100; j++) {
+          const ang = j*0.2;
+          const r = j*0.7;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          if(j===0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        break;
+        
+      case 'digitalAurora':
+        for(let j=0; j<6; j++) {
+          ctx.strokeStyle = `rgba(${100 + j*25},${200 - j*20},255,${0.5 - j*0.05})`;
+          ctx.lineWidth = 8;
+          ctx.beginPath();
+          for(let x=-120; x<=120; x+=10) {
+            const y = Math.sin(x*0.04 + j*0.6)*35 + Math.cos(x*0.02)*15 + (j-3)*8;
+            if(x===-120) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'neonWaves':
+        for(let j=0; j<5; j++) {
+          ctx.strokeStyle = `rgba(255,0,255,${0.7 - j*0.1})`;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          for(let x=-120; x<=120; x+=5) {
+            const y = Math.sin(x*0.06 + j*1.2)*30 + j*12 - 30;
+            if(x===-120) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'energySphere':
+        const grd17 = ctx.createRadialGradient(0,0,0,0,0,70);
+        grd17.addColorStop(0, 'rgba(255,255,0,0.8)');
+        grd17.addColorStop(0.5, 'rgba(255,0,255,0.5)');
+        grd17.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd17;
+        ctx.beginPath();
+        ctx.arc(0, 0, 70, 0, Math.PI*2);
+        ctx.fill();
+        for(let j=0; j<12; j++) {
+          const ang = (j/12)*Math.PI*2;
+          ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang)*70, Math.sin(ang)*70);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'particleFountain':
+        for(let j=0; j<40; j++) {
+          const x = (Math.random()-0.5)*60;
+          const y = -80 + j*4;
+          const size = 2 + Math.random()*3;
+          ctx.fillStyle = `rgba(0,240,255,${0.8 - j*0.015})`;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'cyberVortex':
+        for(let j=0; j<50; j++) {
+          const ang = j*0.2;
+          const r = j*1.5;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          ctx.fillStyle = `rgba(0,240,255,${0.8 - j*0.015})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 2, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'quantumGrid':
+        ctx.strokeStyle = 'rgba(176,67,255,0.4)';
+        ctx.lineWidth = 1;
+        for(let j=-4; j<=4; j++) {
+          for(let k=-4; k<=4; k++) {
+            ctx.strokeRect(j*22-8, k*22-8, 16, 16);
+          }
+        }
+        ctx.fillStyle = 'rgba(0,240,255,0.6)';
+        for(let j=0; j<8; j++) {
+          const x = (Math.random()-0.5)*160;
+          const y = (Math.random()-0.5)*160;
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'laserPulse':
+        for(let j=0; j<6; j++) {
+          const ang = (j/6)*Math.PI*2;
+          ctx.strokeStyle = `rgba(255,0,0,${0.8 - j*0.1})`;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang)*90, Math.sin(ang)*90);
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(255,255,0,0.8)';
+        ctx.beginPath();
+        ctx.arc(0, 0, 12, 0, Math.PI*2);
+        ctx.fill();
+        break;
+        
+      case 'digitalNebula':
+        for(let j=0; j<60; j++) {
+          const x = (Math.random()-0.5)*180;
+          const y = (Math.random()-0.5)*180;
+          const grd18 = ctx.createRadialGradient(x,y,0,x,y,10);
+          grd18.addColorStop(0, `rgba(${100 + Math.random()*155},${50 + Math.random()*100},255,0.5)`);
+          grd18.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = grd18;
+          ctx.fillRect(x-10, y-10, 20, 20);
+        }
+        break;
+        
+      case 'neonMatrix':
+        ctx.strokeStyle = 'rgba(255,0,255,0.4)';
+        ctx.lineWidth = 2;
+        for(let j=-3; j<=3; j++) {
+          for(let k=-3; k<=3; k++) {
+            ctx.strokeRect(j*28-10, k*28-10, 20, 20);
+          }
+        }
+        ctx.fillStyle = 'rgba(0,240,255,0.6)';
+        for(let j=-3; j<=3; j++) {
+          for(let k=-3; k<=3; k++) {
+            if(Math.random() > 0.7) {
+              ctx.fillRect(j*28-8, k*28-8, 16, 16);
+            }
+          }
+        }
+        break;
+        
+      case 'energyFlow':
+        for(let j=0; j<8; j++) {
+          ctx.strokeStyle = `rgba(255,255,0,${0.7 - j*0.08})`;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          for(let x=-120; x<=120; x+=8) {
+            const y = Math.sin(x*0.05 + j*0.8)*25 + (j-4)*12;
+            if(x===-120) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'particleStorm':
+        for(let j=0; j<80; j++) {
+          const x = (Math.random()-0.5)*200;
+          const y = (Math.random()-0.5)*200;
+          const size = 1 + Math.random()*4;
+          ctx.fillStyle = `rgba(${150 + Math.random()*105},${100 + Math.random()*155},255,${0.4 + Math.random()*0.4})`;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI*2);
+          ctx.fill();
+        }
+        break;
+        
+      case 'cyberSphere':
+        ctx.beginPath();
+        ctx.arc(0, 0, 70, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(0,240,255,0.6)';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        for(let j=0; j<6; j++) {
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 70, 20 + j*10, (j/6)*Math.PI, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(176,67,255,${0.4 - j*0.05})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'quantumBurst':
+        for(let j=0; j<20; j++) {
+          const ang = (j/20)*Math.PI*2;
+          const len = 40 + Math.random()*40;
+          ctx.strokeStyle = `rgba(176,67,255,${0.8 - Math.random()*0.3})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang)*len, Math.sin(ang)*len);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'laserWeb':
+        for(let j=0; j<6; j++) {
+          const ang1 = (j/6)*Math.PI*2;
+          const ang2 = ((j+1)/6)*Math.PI*2;
+          ctx.strokeStyle = 'rgba(255,0,0,0.5)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(ang1)*80, Math.sin(ang1)*80);
+          ctx.lineTo(Math.cos(ang2)*80, Math.sin(ang2)*80);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(ang1)*80, Math.sin(ang1)*80);
+          ctx.stroke();
+        }
+        break;
+        
+      case 'digitalVortex':
+        for(let j=0; j<60; j++) {
+          const ang = j*0.25;
+          const r = j*1.2;
+          const x = Math.cos(ang)*r;
+          const y = Math.sin(ang)*r;
+          ctx.fillStyle = `rgba(0,240,255,${0.7 - j*0.01})`;
+          ctx.fillRect(x-2, y-2, 4, 4);
+        }
+        break;
+        
+      case 'neonFlow':
+        for(let j=0; j<6; j++) {
+          ctx.strokeStyle = `rgba(255,0,255,${0.7 - j*0.1})`;
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          for(let x=-120; x<=120; x+=6) {
+            const y = Math.sin(x*0.04 + j*1.0)*35 + (j-3)*15;
+            if(x===-120) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+        }
+        break;
+        
+      case 'energyRings':
+        for(let j=0; j<6; j++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 18 + j*16, 0, Math.PI*2);
+          ctx.strokeStyle = `rgba(255,255,0,${0.7 - j*0.1})`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+        break;
+        
+      case 'particleWeb':
+        const nodes3 = [];
+        for(let j=0; j<15; j++) {
+          nodes3.push({x: (Math.random()-0.5)*160, y: (Math.random()-0.5)*160});
+        }
+        ctx.strokeStyle = 'rgba(0,240,255,0.3)';
+        ctx.lineWidth = 1;
+        for(let j=0; j<nodes3.length; j++) {
+          for(let k=j+1; k<nodes3.length; k++) {
+            const d = Math.hypot(nodes3[j].x-nodes3[k].x, nodes3[j].y-nodes3[k].y);
+            if(d < 80) {
+              ctx.beginPath();
+              ctx.moveTo(nodes3[j].x, nodes3[j].y);
+              ctx.lineTo(nodes3[k].x, nodes3[k].y);
+              ctx.stroke();
+            }
+          }
+        }
+        ctx.fillStyle = 'rgba(255,0,255,0.7)';
+        nodes3.forEach(n => {
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 3, 0, Math.PI*2);
+          ctx.fill();
+        });
+        break;
+        
+      case 'cyberAurora':
+        for(let j=0; j<7; j++) {
+          ctx.strokeStyle = `rgba(${50 + j*30},${150 + j*15},255,${0.5 - j*0.05})`;
+          ctx.lineWidth = 10;
+          ctx.beginPath();
+          for(let x=-120; x<=120; x+=8) {
+            const y = Math.sin(x*0.04 + j*0.6)*35 + Math.cos(x*0.02)*15 + (j-3)*8;
+            if(x===-120) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.stroke();
         }
         break;
     }
@@ -2056,7 +2815,6 @@ function waveformMount(canvas){
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
     for(let layer=0;layer<5;layer++){
       ctx.beginPath();
-      ctx.moveTo(0, H/2);
       for(let x=0;x<=W;x+=5){
         const y = H/2 + 
           Math.sin((x*0.01) + tt*(1 + layer*0.2))*30 +
@@ -2910,7 +3668,7 @@ function laserShowMount(canvas){
       l.ang += l.speed*0.02;
       const x = Math.cos(l.ang)*W*0.4;
       const y = Math.sin(l.ang)*H*0.4;
-      const grd = ctx.createLinearGradient(0,0,x,y);
+      const grd = ctx.createLinearGradient(0, 0, x, y);
       grd.addColorStop(0, l.color + '0.8)');
       grd.addColorStop(0.5, l.color + '0.4)');
       grd.addColorStop(1, l.color + '0)');
@@ -3149,6 +3907,1386 @@ function plasmaStormMount(canvas){
   return { unmount(){ runner.stop(); } };
 }
 
+
+function neonTunnelMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<20; i++){
+      const scale = 1 - i*0.05 + Math.sin(tt + i*0.3)*0.02;
+      const alpha = 0.6 - i*0.03;
+      ctx.save();
+      ctx.scale(scale, scale);
+      ctx.rotate(tt*0.1 + i*0.1);
+      ctx.strokeStyle = `rgba(255,0,255,${alpha})`;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(-200, -200, 400, 400);
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function gravityWellMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:150}, ()=>({
+    angle: Math.random()*Math.PI*2,
+    radius: 100 + Math.random()*300,
+    speed: 0.5 + Math.random()*1
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.angle += 0.01 * p.speed;
+      p.radius -= 0.3;
+      if(p.radius < 20){
+        p.radius = 400;
+        p.angle = Math.random()*Math.PI*2;
+      }
+      const x = Math.cos(p.angle) * p.radius;
+      const y = Math.sin(p.angle) * p.radius;
+      ctx.fillStyle = `rgba(0,240,255,${1 - p.radius/400})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function prismRefractMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const colors = ['rgba(255,0,0,0.3)', 'rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)', 
+                    'rgba(255,255,0,0.3)', 'rgba(255,0,255,0.3)', 'rgba(0,255,255,0.3)'];
+    for(let i=0; i<6; i++){
+      ctx.save();
+      ctx.rotate((i/6)*Math.PI*2 + tt*0.2);
+      ctx.translate(Math.sin(tt + i)*30, 0);
+      ctx.fillStyle = colors[i];
+      ctx.beginPath();
+      ctx.moveTo(0, -150);
+      ctx.lineTo(100, 150);
+      ctx.lineTo(-100, 150);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function quantumFoamMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const bubbles = Array.from({length:80}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    r: 10 + Math.random()*40,
+    speed: 0.2 + Math.random()*0.5,
+    phase: Math.random()*Math.PI*2
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<bubbles.length; i++){
+      const b = bubbles[i];
+      b.y -= b.speed;
+      if(b.y < -50) b.y = H + 50;
+      const pulse = Math.sin(tt*2 + b.phase)*0.3 + 0.7;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r*pulse, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(0,240,255,${0.3*pulse})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberRainMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const drops = Array.from({length:100}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    speed: 2 + Math.random()*5,
+    len: 20 + Math.random()*40
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<drops.length; i++){
+      const d = drops[i];
+      d.y += d.speed;
+      if(d.y > H + 50){
+        d.y = -50;
+        d.x = Math.random()*W;
+      }
+      const grd = ctx.createLinearGradient(d.x, d.y-d.len, d.x, d.y);
+      grd.addColorStop(0, 'rgba(0,240,255,0)');
+      grd.addColorStop(1, 'rgba(0,240,255,0.8)');
+      ctx.strokeStyle = grd;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y-d.len);
+      ctx.lineTo(d.x, d.y);
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function spiralMatrixMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<200; i++){
+      const angle = i*0.3 + tt;
+      const radius = i*2;
+      const x = Math.cos(angle)*radius;
+      const y = Math.sin(angle)*radius;
+      const alpha = 1 - i/200;
+      ctx.fillStyle = `rgba(176,67,255,${alpha*0.6})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function energyVortexMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<12; i++){
+      const angle = (i/12)*Math.PI*2 + tt;
+      ctx.save();
+      ctx.rotate(angle);
+      for(let j=0; j<10; j++){
+        const r = j*30 + Math.sin(tt*2 + j)*10;
+        const alpha = 0.5 - j*0.04;
+        ctx.strokeStyle = `rgba(255,0,255,${alpha})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI/3);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalHorizonMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    const grd = ctx.createLinearGradient(0,0,0,H);
+    grd.addColorStop(0, '#000033');
+    grd.addColorStop(0.5, '#000066');
+    grd.addColorStop(1, '#000000');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+    ctx.lineWidth = 2;
+    for(let i=0; i<20; i++){
+      const y = H*0.6 + i*10;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      for(let x=0; x<=W; x+=20){
+        const wave = Math.sin((x*0.01) + tt + i*0.2)*5;
+        ctx.lineTo(x, y + wave);
+      }
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleSwarmMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:200}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*2,
+    vy: (Math.random()-0.5)*2
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    const centerX = W/2 + Math.cos(tt)*100;
+    const centerY = H/2 + Math.sin(tt)*100;
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      const dx = centerX - p.x;
+      const dy = centerY - p.y;
+      p.vx += dx*0.0001;
+      p.vy += dy*0.0001;
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > W) p.vx *= -0.5;
+      if(p.y < 0 || p.y > H) p.vy *= -0.5;
+      ctx.fillStyle = 'rgba(0,240,255,0.6)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function neonPulseMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<8; i++){
+      const pulse = Math.sin(tt*2 - i*0.5)*0.5 + 0.5;
+      const r = 50 + i*40 + pulse*20;
+      const alpha = 0.6 - i*0.06;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,0,255,${alpha*pulse})`;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalZoomMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const zoom = 1 + Math.sin(tt)*0.3;
+    ctx.scale(zoom, zoom);
+    ctx.rotate(tt*0.1);
+    for(let i=0; i<5; i++){
+      const scale = Math.pow(0.6, i);
+      ctx.save();
+      ctx.scale(scale, scale);
+      ctx.strokeStyle = `rgba(0,240,255,${0.6 - i*0.1})`;
+      ctx.lineWidth = 3/scale;
+      ctx.strokeRect(-200, -200, 400, 400);
+      ctx.beginPath();
+      ctx.moveTo(-200, 0);
+      ctx.lineTo(200, 0);
+      ctx.moveTo(0, -200);
+      ctx.lineTo(0, 200);
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function laserGridMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(255,0,0,0.6)';
+    ctx.lineWidth = 2;
+    const spacing = 50;
+    for(let x=0; x<W; x+=spacing){
+      const offset = Math.sin(tt + x*0.01)*10;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + offset, H);
+      ctx.stroke();
+    }
+    for(let y=0; y<H; y+=spacing){
+      const offset = Math.cos(tt + y*0.01)*10;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y + offset);
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function quantumTunnelMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<30; i++){
+      const z = i/30;
+      const scale = z + Math.sin(tt + i*0.2)*0.05;
+      const alpha = 1 - z;
+      ctx.save();
+      ctx.scale(scale, scale);
+      ctx.rotate(tt*0.5 + i*0.1);
+      ctx.strokeStyle = `rgba(176,67,255,${alpha*0.5})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, 200, 0, Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberWavesMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    for(let layer=0; layer<8; layer++){
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=5){
+        const y = H/2 + layer*30 + 
+          Math.sin((x*0.01) + tt*(1 + layer*0.1))*40 +
+          Math.cos((x*0.02) - tt*(0.5 + layer*0.05))*20;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(0,240,255,${0.6 - layer*0.06})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function plasmaRingsMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<10; i++){
+      const r = 50 + i*40;
+      const hue = (tt*50 + i*36) % 360;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI*2);
+      ctx.strokeStyle = `hsla(${hue}, 100%, 50%, ${0.5 - i*0.04})`;
+      ctx.lineWidth = 8;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalWaterfallMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cols = Math.floor(W/10);
+  const drops = new Array(cols).fill(0).map(()=>({
+    y: Math.random()*H,
+    speed: 2 + Math.random()*3
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<cols; i++){
+      const d = drops[i];
+      const x = i*10;
+      ctx.fillStyle = `rgba(0,240,255,${0.6 + Math.random()*0.4})`;
+      ctx.fillRect(x, d.y, 8, 20);
+      d.y += d.speed;
+      if(d.y > H) d.y = -20;
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function neonSpiralMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    ctx.beginPath();
+    for(let i=0; i<300; i++){
+      const angle = i*0.1 + tt;
+      const radius = i*1.5;
+      const x = Math.cos(angle)*radius;
+      const y = Math.sin(angle)*radius;
+      if(i===0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(255,0,255,0.6)';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function energyBurstMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const burst = Math.sin(tt*2)*0.5 + 0.5;
+    for(let i=0; i<24; i++){
+      const angle = (i/24)*Math.PI*2;
+      const len = 100 + burst*150;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(angle)*len, Math.sin(angle)*len);
+      ctx.strokeStyle = `rgba(255,200,0,${0.6*burst})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleTrailsMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:50}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*3,
+    vy: (Math.random()-0.5)*3,
+    trail: []
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > W) p.vx *= -1;
+      if(p.y < 0 || p.y > H) p.vy *= -1;
+      p.trail.push({x: p.x, y: p.y});
+      if(p.trail.length > 20) p.trail.shift();
+      for(let j=0; j<p.trail.length-1; j++){
+        const alpha = j/p.trail.length;
+        ctx.strokeStyle = `rgba(0,240,255,${alpha*0.6})`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(p.trail[j].x, p.trail[j].y);
+        ctx.lineTo(p.trail[j+1].x, p.trail[j+1].y);
+        ctx.stroke();
+      }
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberBloomMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<12; i++){
+      const angle = (i/12)*Math.PI*2 + tt*0.5;
+      const len = 100 + Math.sin(tt*2 + i)*50;
+      ctx.save();
+      ctx.rotate(angle);
+      for(let j=0; j<5; j++){
+        const scale = 1 - j*0.15;
+        ctx.fillStyle = `rgba(255,0,255,${0.4 - j*0.06})`;
+        ctx.beginPath();
+        ctx.ellipse(len, 0, 30*scale, 60*scale, 0, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function quantumRipplesMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const ripples = [];
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    if(Math.random() < 0.02){
+      ripples.push({x: Math.random()*W, y: Math.random()*H, r: 0, age: 0});
+    }
+    for(let i=ripples.length-1; i>=0; i--){
+      const rip = ripples[i];
+      rip.r += 2;
+      rip.age += 0.016;
+      if(rip.age > 2) {
+        ripples.splice(i, 1);
+        continue;
+      }
+      const alpha = 1 - rip.age/2;
+      ctx.beginPath();
+      ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(0,240,255,${alpha*0.6})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function laserBeamsMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const beams = Array.from({length:12}, (_, i)=>({
+    angle: (i/12)*Math.PI*2,
+    speed: 0.5 + Math.random()*0.5
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<beams.length; i++){
+      const b = beams[i];
+      b.angle += 0.01*b.speed;
+      const x = Math.cos(b.angle)*500;
+      const y = Math.sin(b.angle)*500;
+      const grd = ctx.createLinearGradient(0, 0, x, y);
+      grd.addColorStop(0, 'rgba(255,0,0,0.6)');
+      grd.addColorStop(1, 'rgba(255,0,0,0)');
+      ctx.strokeStyle = grd;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalSmokeMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const particles = Array.from({length:100}, ()=>({
+    x: W/2 + (Math.random()-0.5)*50,
+    y: H,
+    vx: (Math.random()-0.5)*2,
+    vy: -1 - Math.random()*2,
+    size: 10 + Math.random()*20,
+    alpha: 0.6
+  }));
+  const runner = makeRunner((t)=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= 0.005;
+      p.size += 0.2;
+      if(p.alpha <= 0 || p.y < -50){
+        p.x = W/2 + (Math.random()-0.5)*50;
+        p.y = H;
+        p.alpha = 0.6;
+        p.size = 10 + Math.random()*20;
+      }
+      ctx.fillStyle = `rgba(0,240,255,${p.alpha*0.3})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function neonRingsMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<15; i++){
+      const r = 50 + i*30;
+      const rotation = tt*0.5 + i*0.3;
+      ctx.save();
+      ctx.rotate(rotation);
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI);
+      ctx.strokeStyle = `rgba(255,0,255,${0.6 - i*0.03})`;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function energyWebMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const nodes = Array.from({length:30}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = 'rgba(255,200,0,0.3)';
+    ctx.lineWidth = 1;
+    for(let i=0; i<nodes.length; i++){
+      for(let j=i+1; j<nodes.length; j++){
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d < 200){
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for(let i=0; i<nodes.length; i++){
+      const n = nodes[i];
+      n.x += Math.sin(tt + i)*0.5;
+      n.y += Math.cos(tt + i*0.5)*0.5;
+      ctx.fillStyle = 'rgba(255,200,0,0.8)';
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleDanceMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:100}, (_, i)=>({
+    angle: (i/100)*Math.PI*2,
+    radius: 100 + Math.random()*100,
+    speed: 0.5 + Math.random()*0.5
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.angle += 0.01*p.speed;
+      const x = Math.cos(p.angle)*p.radius;
+      const y = Math.sin(p.angle)*p.radius;
+      ctx.fillStyle = `rgba(176,67,255,${0.6 + Math.sin(tt + i)*0.3})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberPulseMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    const pulse = Math.sin(tt*3)*0.5 + 0.5;
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 200*pulse);
+    grd.addColorStop(0, `rgba(0,240,255,${0.6*pulse})`);
+    grd.addColorStop(1, 'rgba(0,240,255,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(-W/2, -H/2, W, H);
+    for(let i=0; i<6; i++){
+      const r = 50 + i*50 + pulse*30;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(0,240,255,${(0.6 - i*0.08)*pulse})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function quantumStringsMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const strings = Array.from({length:20}, (_, i)=>({
+    y: (i/20)*H,
+    phase: Math.random()*Math.PI*2
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<strings.length; i++){
+      const s = strings[i];
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=5){
+        const y = s.y + Math.sin((x*0.02) + tt + s.phase)*30;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(176,67,255,${0.5 - i*0.02})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function laserSpiralMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    ctx.rotate(tt*0.5);
+    for(let i=0; i<3; i++){
+      ctx.save();
+      ctx.rotate((i/3)*Math.PI*2);
+      ctx.beginPath();
+      for(let j=0; j<100; j++){
+        const angle = j*0.1;
+        const radius = j*2;
+        const x = Math.cos(angle)*radius;
+        const y = Math.sin(angle)*radius;
+        if(j===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(255,0,0,${0.6 - i*0.15})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalAuroraMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,10,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let layer=0; layer<5; layer++){
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=10){
+        const y = H*0.4 + layer*30 + 
+          Math.sin((x*0.008) + tt*1.5 + layer)*70 +
+          Math.cos((x*0.012) - tt + layer*0.5)*50;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      const hue = (tt*30 + layer*60) % 360;
+      ctx.strokeStyle = `hsla(${hue}, 100%, 50%, ${0.4 - layer*0.05})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function neonWavesMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<10; i++){
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=5){
+        const y = H/2 + i*20 + Math.sin((x*0.01) + tt + i*0.5)*30;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(255,0,255,${0.6 - i*0.05})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function energySphereMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const pulse = Math.sin(tt*2)*0.3 + 0.7;
+    const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 150*pulse);
+    grd.addColorStop(0, `rgba(255,200,0,${0.8*pulse})`);
+    grd.addColorStop(0.5, `rgba(255,100,0,${0.4*pulse})`);
+    grd.addColorStop(1, 'rgba(255,0,0,0)');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(0, 0, 150*pulse, 0, Math.PI*2);
+    ctx.fill();
+    for(let i=0; i<8; i++){
+      const angle = (i/8)*Math.PI*2 + tt;
+      const x = Math.cos(angle)*100*pulse;
+      const y = Math.sin(angle)*100*pulse;
+      ctx.fillStyle = 'rgba(255,255,0,0.6)';
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleFountainMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const particles = [];
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    if(Math.random() < 0.3){
+      particles.push({
+        x: W/2,
+        y: H,
+        vx: (Math.random()-0.5)*5,
+        vy: -5 - Math.random()*5,
+        life: 1
+      });
+    }
+    for(let i=particles.length-1; i>=0; i--){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.1;
+      p.life -= 0.01;
+      if(p.life <= 0){
+        particles.splice(i, 1);
+        continue;
+      }
+      ctx.fillStyle = `rgba(0,240,255,${p.life*0.6})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberVortexMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<100; i++){
+      const angle = i*0.2 + tt*2;
+      const radius = i*2.5;
+      const x = Math.cos(angle)*radius;
+      const y = Math.sin(angle)*radius;
+      const alpha = 1 - i/100;
+      ctx.fillStyle = `rgba(0,240,255,${alpha*0.6})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function quantumGridMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    const spacing = 40;
+    ctx.strokeStyle = 'rgba(176,67,255,0.3)';
+    ctx.lineWidth = 1;
+    for(let x=0; x<W; x+=spacing){
+      for(let y=0; y<H; y+=spacing){
+        const wave = Math.sin(tt + x*0.01 + y*0.01)*10;
+        ctx.beginPath();
+        ctx.arc(x, y + wave, 3, 0, Math.PI*2);
+        ctx.stroke();
+      }
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function laserPulseMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const pulse = Math.sin(tt*4)*0.5 + 0.5;
+    for(let i=0; i<16; i++){
+      const angle = (i/16)*Math.PI*2;
+      const len = 50 + pulse*200;
+      const x = Math.cos(angle)*len;
+      const y = Math.sin(angle)*len;
+      ctx.fillStyle = `rgba(255,0,0,${0.6*pulse})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalNebulaMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:300}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    size: Math.random()*3,
+    speed: 0.1 + Math.random()*0.3
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,10,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.x += Math.sin(tt + i)*p.speed;
+      p.y += Math.cos(tt + i*0.5)*p.speed;
+      if(p.x < 0) p.x = W;
+      if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H;
+      if(p.y > H) p.y = 0;
+      const hue = (tt*20 + i) % 360;
+      ctx.fillStyle = `hsla(${hue}, 100%, 50%, 0.6)`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function neonMatrixMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    const spacing = 30;
+    ctx.strokeStyle = 'rgba(255,0,255,0.4)';
+    ctx.lineWidth = 2;
+    for(let x=0; x<W; x+=spacing){
+      const offset = Math.sin(tt + x*0.01)*20;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + offset, H);
+      ctx.stroke();
+    }
+    for(let y=0; y<H; y+=spacing){
+      const offset = Math.cos(tt + y*0.01)*20;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y + offset);
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function energyFlowMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<5; i++){
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=5){
+        const y = H/2 + i*50 + 
+          Math.sin((x*0.01) + tt*2 + i)*40 +
+          Math.cos((x*0.02) - tt + i)*30;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(255,200,0,${0.6 - i*0.1})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleStormMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:200}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*5,
+    vy: (Math.random()-0.5)*5,
+    size: 1 + Math.random()*3
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > W) p.vx *= -1;
+      if(p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.fillStyle = 'rgba(176,67,255,0.6)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberSphereMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let lat=-90; lat<=90; lat+=15){
+      ctx.beginPath();
+      for(let lon=0; lon<=360; lon+=5){
+        const latRad = lat*Math.PI/180;
+        const lonRad = (lon + tt*30)*Math.PI/180;
+        const r = 150;
+        const x = Math.cos(latRad)*Math.cos(lonRad)*r;
+        const y = Math.cos(latRad)*Math.sin(lonRad)*r;
+        if(lon===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(0,240,255,0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function quantumBurstMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    const burst = (Math.sin(tt*3) + 1)/2;
+    for(let i=0; i<32; i++){
+      const angle = (i/32)*Math.PI*2;
+      const len = 50 + burst*200;
+      const x = Math.cos(angle)*len;
+      const y = Math.sin(angle)*len;
+      ctx.fillStyle = `rgba(176,67,255,${0.6*burst})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function laserWebMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const nodes = Array.from({length:20}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*0.5,
+    vy: (Math.random()-0.5)*0.5
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<nodes.length; i++){
+      const n = nodes[i];
+      n.x += n.vx;
+      n.y += n.vy;
+      if(n.x < 0 || n.x > W) n.vx *= -1;
+      if(n.y < 0 || n.y > H) n.vy *= -1;
+    }
+    ctx.strokeStyle = 'rgba(255,0,0,0.3)';
+    ctx.lineWidth = 1;
+    for(let i=0; i<nodes.length; i++){
+      for(let j=i+1; j<nodes.length; j++){
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d < 150){
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for(let i=0; i<nodes.length; i++){
+      ctx.fillStyle = 'rgba(255,0,0,0.8)';
+      ctx.beginPath();
+      ctx.arc(nodes[i].x, nodes[i].y, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function digitalVortexMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<150; i++){
+      const angle = i*0.15 + tt*3;
+      const radius = i*2.5;
+      const x = Math.cos(angle)*radius;
+      const y = Math.sin(angle)*radius;
+      const alpha = 1 - i/150;
+      ctx.fillStyle = `rgba(0,240,255,${alpha*0.6})`;
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function neonFlowMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<8; i++){
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=5){
+        const y = H/2 + i*30 + 
+          Math.sin((x*0.01) + tt*1.5 + i)*50;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(255,0,255,${0.6 - i*0.06})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function energyRingsMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let i=0; i<12; i++){
+      const r = 40 + i*35;
+      const pulse = Math.sin(tt*2 - i*0.3)*0.3 + 0.7;
+      ctx.beginPath();
+      ctx.arc(0, 0, r*pulse, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,200,0,${(0.6 - i*0.04)*pulse})`;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function particleWebMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const particles = Array.from({length:40}, ()=>({
+    x: Math.random()*W,
+    y: Math.random()*H,
+    vx: (Math.random()-0.5)*0.3,
+    vy: (Math.random()-0.5)*0.3
+  }));
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let i=0; i<particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      if(p.x < 0 || p.x > W) p.vx *= -1;
+      if(p.y < 0 || p.y > H) p.vy *= -1;
+    }
+    ctx.strokeStyle = 'rgba(176,67,255,0.2)';
+    ctx.lineWidth = 1;
+    for(let i=0; i<particles.length; i++){
+      for(let j=i+1; j<particles.length; j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d < 180){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for(let i=0; i<particles.length; i++){
+      ctx.fillStyle = 'rgba(176,67,255,0.8)';
+      ctx.beginPath();
+      ctx.arc(particles[i].x, particles[i].y, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function cyberAuroraMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,W,H);
+    for(let layer=0; layer<6; layer++){
+      ctx.beginPath();
+      for(let x=0; x<=W; x+=10){
+        const y = H*0.4 + layer*30 + 
+          Math.sin((x*0.008) + tt*1.5 + layer)*70 +
+          Math.cos((x*0.012) - tt + layer*0.5)*50;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      const colors = ['rgba(0,240,255,', 'rgba(176,67,255,', 'rgba(255,0,255,'];
+      const color = colors[layer % 3];
+      ctx.strokeStyle = color + (0.5 - layer*0.06) + ')';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
 const templates = {
   cyberMinimal: { mount: cyberMinimalMount },
   cryptoOrb: { mount: cryptoOrbMount },
@@ -3201,7 +5339,55 @@ const templates = {
   circuitBoard: { mount: circuitBoardMount },
   audioVisualizer: { mount: audioVisualizerMount },
   timeTunnel: { mount: timeTunnelMount },
-  plasmaStorm: { mount: plasmaStormMount }
+  plasmaStorm: { mount: plasmaStormMount },
+  neonTunnel: { mount: neonTunnelMount },
+  gravityWell: { mount: gravityWellMount },
+  prismRefract: { mount: prismRefractMount },
+  quantumFoam: { mount: quantumFoamMount },
+  cyberRain: { mount: cyberRainMount },
+  spiralMatrix: { mount: spiralMatrixMount },
+  energyVortex: { mount: energyVortexMount },
+  digitalHorizon: { mount: digitalHorizonMount },
+  particleSwarm: { mount: particleSwarmMount },
+  neonPulse: { mount: neonPulseMount },
+  fractalZoom: { mount: fractalZoomMount },
+  laserGrid: { mount: laserGridMount },
+  quantumTunnel: { mount: quantumTunnelMount },
+  cyberWaves: { mount: cyberWavesMount },
+  plasmaRings: { mount: plasmaRingsMount },
+  digitalWaterfall: { mount: digitalWaterfallMount },
+  neonSpiral: { mount: neonSpiralMount },
+  energyBurst: { mount: energyBurstMount },
+  particleTrails: { mount: particleTrailsMount },
+  cyberBloom: { mount: cyberBloomMount },
+  quantumRipples: { mount: quantumRipplesMount },
+  laserBeams: { mount: laserBeamsMount },
+  digitalSmoke: { mount: digitalSmokeMount },
+  neonRings: { mount: neonRingsMount },
+  energyWeb: { mount: energyWebMount },
+  particleDance: { mount: particleDanceMount },
+  cyberPulse: { mount: cyberPulseMount },
+  quantumStrings: { mount: quantumStringsMount },
+  laserSpiral: { mount: laserSpiralMount },
+  digitalAurora: { mount: digitalAuroraMount },
+  neonWaves: { mount: neonWavesMount },
+  energySphere: { mount: energySphereMount },
+  particleFountain: { mount: particleFountainMount },
+  cyberVortex: { mount: cyberVortexMount },
+  quantumGrid: { mount: quantumGridMount },
+  laserPulse: { mount: laserPulseMount },
+  digitalNebula: { mount: digitalNebulaMount },
+  neonMatrix: { mount: neonMatrixMount },
+  energyFlow: { mount: energyFlowMount },
+  particleStorm: { mount: particleStormMount },
+  cyberSphere: { mount: cyberSphereMount },
+  quantumBurst: { mount: quantumBurstMount },
+  laserWeb: { mount: laserWebMount },
+  digitalVortex: { mount: digitalVortexMount },
+  neonFlow: { mount: neonFlowMount },
+  energyRings: { mount: energyRingsMount },
+  particleWeb: { mount: particleWebMount },
+  cyberAurora: { mount: cyberAuroraMount }
 };
 
 window.addEventListener('beforeunload', ()=>{
