@@ -2033,6 +2033,7 @@ TEMPLATE_IDS.forEach((id, i)=>{
 
 			case 'fractalBranch':
 				ctx.strokeStyle = 'rgba(150,255,150,0.4)';
+				ctx.translate(0, 40);
 				function drawBranch(x,y,len,angle,depth){
 					if(depth===0) return;
 					const x2=x+Math.cos(angle)*len, y2=y+Math.sin(angle)*len;
