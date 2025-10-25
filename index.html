@@ -5500,7 +5500,7 @@ function fractalFernMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    drawFern(W/2, H-20, 120, -Math.PI/2, 9, tt);
+    drawFern(W/2, H + 20, 120, -Math.PI/2, 9, tt);
   });
   return { unmount(){ runner.stop(); } };
 }
