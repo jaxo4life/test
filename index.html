@@ -5563,7 +5563,7 @@ function fractalDragonMount(canvas) {
     }
 
     const offset = Math.sin(t * 3 + depth * 0.8) * 0.25;
-    const lenScale = 0.707; // sqrt(0.5)
+    const lenScale = 0.651;
     const x2 = x + Math.cos(angle) * len * lenScale;
     const y2 = y + Math.sin(angle) * len * lenScale;
 
@@ -5585,7 +5585,7 @@ function fractalDragonMount(canvas) {
     ctx.fillRect(0, 0, W, H);
 
     ctx.save();
-    ctx.translate(W / 2, H / 2 + 100);
+    ctx.translate(W / 2, H / 2 + 20);
     ctx.rotate(rotation);
 
     drawDragon(0, 0, len, -Math.PI / 2, smoothDepth, tt);
