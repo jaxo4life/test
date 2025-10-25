@@ -4644,7 +4644,7 @@ function energyVortexMount(canvas){
       ctx.save();
       ctx.rotate(angle);
       for(let j=0; j<10; j++){
-        const r = j*30 + Math.sin(tt*2 + j)*10;
+        const r = Math.max(0, j*30 + Math.sin(tt*2 + j)*10);
         const alpha = 0.5 - j*0.04;
         ctx.strokeStyle = `rgba(255,0,255,${alpha})`;
         ctx.lineWidth = 3;
@@ -4663,27 +4663,38 @@ function digitalHorizonMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  const runner = makeRunner((t)=>{
+
+  const runner = makeRunner(()=>{
     const tt = (performance.now()-t0)/1000;
+
     const grd = ctx.createLinearGradient(0,0,0,H);
-    grd.addColorStop(0, '#000033');
-    grd.addColorStop(0.5, '#000066');
+    grd.addColorStop(0, '#000011');
+    grd.addColorStop(0.5, '#001122');
     grd.addColorStop(1, '#000000');
     ctx.fillStyle = grd;
     ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle = 'rgba(0,240,255,0.4)';
-    ctx.lineWidth = 2;
-    for(let i=0; i<20; i++){
-      const y = H*0.6 + i*10;
+
+    for(let i=0; i<25; i++){
+      const alpha = 0.1 + 0.25*Math.exp(-i*0.1);
+      const waveHeight = 4 + i*1.5;
+      const yBase = H*0.6 + i*8 + Math.sin(tt*0.5 + i)*10;
+
+      ctx.strokeStyle = `rgba(0,240,255,${alpha})`;
+      ctx.lineWidth = 1 + i*0.05;
       ctx.beginPath();
-      ctx.moveTo(0, y);
-      for(let x=0; x<=W; x+=20){
-        const wave = Math.sin((x*0.01) + tt + i*0.2)*5;
-        ctx.lineTo(x, y + wave);
+
+      for(let x=0; x<=W; x+=10){
+        const wave = Math.sin((x*0.015) + tt*1.2 + i*0.3)*waveHeight;
+        const jitter = (Math.random()-0.5)*0.5;
+        const y = yBase + wave + jitter;
+        if(x===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
+
       ctx.stroke();
     }
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
@@ -4837,23 +4848,41 @@ function cyberWavesMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  const runner = makeRunner((t)=>{
+
+  const runner = makeRunner(()=>{
     const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    for(let layer=0; layer<8; layer++){
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillRect(0,0,W,H);
+
+    for(let layer=0; layer<10; layer++){
+      const yOffset = H*0.3 + layer*25 + Math.sin(tt*0.5 + layer)*15;
       ctx.beginPath();
       for(let x=0; x<=W; x+=5){
-        const y = H/2 + layer*30 + 
-          Math.sin((x*0.01) + tt*(1 + layer*0.1))*40 +
-          Math.cos((x*0.02) - tt*(0.5 + layer*0.05))*20;
+        const y = yOffset +
+          Math.sin(x*0.02 + tt*(1 + layer*0.1))*30 +
+          Math.cos(x*0.015 - tt*(0.7 + layer*0.05))*15;
         if(x===0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = `rgba(0,240,255,${0.6 - layer*0.06})`;
-      ctx.lineWidth = 2;
+      const alpha = 0.6 - layer*0.05;
+      const r = Math.floor(0 + layer*12);
+      const g = 200;
+      const b = Math.floor(255 - layer*15);
+      ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+      ctx.lineWidth = 2 + layer*0.2;
       ctx.stroke();
+
+      for(let i=0; i<W; i+=50){
+        const px = i + Math.sin(tt*2 + i*0.1 + layer)*20;
+        const py = yOffset + Math.sin(px*0.02 + tt*2 + layer)*30;
+        ctx.fillStyle = `rgba(0,255,255,0.3)`;
+        ctx.beginPath();
+        ctx.arc(px, py, 2 + Math.random()*1.5, 0, Math.PI*2);
+        ctx.fill();
+      }
     }
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
@@ -4993,27 +5022,39 @@ function cyberBloomMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  const runner = makeRunner((t)=>{
+
+  const runner = makeRunner(()=>{
     const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,W,H);
     ctx.save();
     ctx.translate(W/2, H/2);
-    for(let i=0; i<12; i++){
-      const angle = (i/12)*Math.PI*2 + tt*0.5;
-      const len = 100 + Math.sin(tt*2 + i)*50;
+
+    const petals = 16;
+    for(let i=0; i<petals; i++){
+      const angle = (i/petals)*Math.PI*2 + Math.sin(tt*0.3 + i)*0.2;
+      const len = 120 + Math.sin(tt*1.5 + i)*60;
       ctx.save();
       ctx.rotate(angle);
-      for(let j=0; j<5; j++){
-        const scale = 1 - j*0.15;
-        ctx.fillStyle = `rgba(255,0,255,${0.4 - j*0.06})`;
+
+      for(let j=0; j<6; j++){
+        const scale = 1 - j*0.12 + Math.sin(tt*0.5 + j*i)*0.05;
+        const alpha = 0.5 - j*0.07 + Math.sin(tt*0.7 + i*0.3)*0.1;
+        const grd = ctx.createRadialGradient(len,0,0,len*0.5,0,30*scale);
+        grd.addColorStop(0, `rgba(${200 + i*3},0,${255 - i*5},${alpha})`);
+        grd.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd;
         ctx.beginPath();
-        ctx.ellipse(len, 0, 30*scale, 60*scale, 0, 0, Math.PI*2);
+        ctx.ellipse(len, 0, 20*scale, 50*scale, 0, 0, Math.PI*2);
         ctx.fill();
       }
+
       ctx.restore();
     }
+
     ctx.restore();
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
