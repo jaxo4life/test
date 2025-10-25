@@ -1980,21 +1980,33 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				break;
 
 			case 'fractalDragon':
-				ctx.strokeStyle = 'rgba(255,100,150,0.5)';
-				ctx.lineWidth = 1;
-				let dragonSeq = [1];
-				for(let i=0;i<8;i++){
-					dragonSeq = [...dragonSeq, 1, ...dragonSeq.reverse().map(x=>-x)];
+				function drawDragon(x, y, len, angle, depth) {
+					if (depth <= 0 || len < 1) {
+						const x2 = x + Math.cos(angle) * len;
+						const y2 = y + Math.sin(angle) * len;
+						ctx.beginPath();
+						ctx.moveTo(x, y);
+						ctx.lineTo(x2, y2);
+						const hue = 330 + y * 0.3;
+						ctx.strokeStyle = `hsl(${hue}, 80%, 65%)`;
+						ctx.lineWidth = 1;
+						ctx.stroke();
+						return;
+					}
+					const lenScale = 0.707;
+					const x2 = x + Math.cos(angle) * len * lenScale;
+					const y2 = y + Math.sin(angle) * len * lenScale;
+					drawDragon(x, y, len * lenScale, angle - Math.PI / 4, depth - 1);
+					drawDragon(x2, y2, len * lenScale, angle + Math.PI / 4, depth - 1);
 				}
-				let dx=0, dy=0, angle=0;
-				ctx.beginPath(); ctx.moveTo(dx,dy);
-				dragonSeq.forEach(turn=>{
-					angle += turn*Math.PI/2;
-					dx += Math.cos(angle)*2;
-					dy += Math.sin(angle)*2;
-					ctx.lineTo(dx,dy);
-				});
-				ctx.stroke();
+
+				const depth = 10;
+				const len = 60;
+
+				drawDragon(0, 0, len, -Math.PI / 2, depth);
+				ctx.scale(-1, 1);
+				drawDragon(0, 0, len, -Math.PI / 2, depth);
+
 				ctx.restore();
 				break;
 
@@ -5695,33 +5707,72 @@ function fractalBranchMount(canvas){
   return { unmount(){ runner.stop(); } };
 }
 
-function fractalLightningMount(canvas){
+function fractalLightningMount(canvas) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
-  function drawLightning(x1, y1, x2, y2, depth, seed) {
-    if(depth === 0){
+
+  function drawLightning(x1, y1, x2, y2, depth, offset, seed) {
+    if (depth === 0) {
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
       return;
     }
-    const mx = (x1+x2)/2 + (Math.sin(seed)*0.5-0.25)*80;
-    const my = (y1+y2)/2 + (Math.cos(seed)*0.5-0.25)*80;
-    drawLightning(x1, y1, mx, my, depth-1, seed*1.3);
-    drawLightning(mx, my, x2, y2, depth-1, seed*1.7);
+
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    const normal = [-dy / len, dx / len];
+    const displacement = (Math.sin(seed * 1.7 + offset) + Math.random() - 0.5) * len * 0.2;
+
+    const mx = midX + normal[0] * displacement;
+    const my = midY + normal[1] * displacement;
+
+    drawLightning(x1, y1, mx, my, depth - 1, offset + 0.7, seed * 1.9);
+    drawLightning(mx, my, x2, y2, depth - 1, offset + 1.3, seed * 1.2);
+
+    if (Math.random() < 0.2 && depth > 2) {
+      const branchLen = len * 0.5 * Math.random();
+      const branchAngle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
+      const bx = mx + Math.cos(branchAngle) * branchLen;
+      const by = my + Math.sin(branchAngle) * branchLen;
+      drawLightning(mx, my, bx, by, depth - 2, offset + 0.5, seed * 2.3);
+    }
   }
-  const runner = makeRunner((t)=>{
-    const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle = `rgba(150,200,255,${0.7+Math.sin(tt*5)*0.3})`;
-    ctx.lineWidth = 3;
-    for(let i=0;i<3;i++){
-      drawLightning(W/2+i*50-50, 50, W/2+i*50-50, H+20, 6, tt+i);
+
+  const runner = makeRunner(() => {
+    const tt = (performance.now() - t0) / 1000;
+    ctx.fillStyle = "rgba(0,0,0,0.15)";
+    ctx.fillRect(0, 0, W, H);
+
+    const glow = 0.6 + Math.sin(tt * 10) * 0.4;
+    ctx.strokeStyle = `rgba(180,220,255,${glow})`;
+    ctx.lineWidth = 2.5 + Math.sin(tt * 2) * 0.5;
+
+    for (let i = 0; i < 2; i++) {
+      const startX = W / 2 + (i - 0.5) * 80;
+      drawLightning(startX, 0, startX + Math.sin(tt + i) * 40, H, 7, tt + i, 0.8 + i);
+    }
+
+    if (Math.random() < 0.05) {
+      const gx = W / 2 + (Math.random() - 0.5) * 100;
+      const gy = H * 0.9 + Math.random() * 20;
+      const radius = 10 + Math.random() * 20;
+      const grd = ctx.createRadialGradient(gx, gy, 0, gx, gy, radius);
+      grd.addColorStop(0, `rgba(255,255,255,0.8)`);
+      grd.addColorStop(1, `rgba(0,0,0,0)`);
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(gx, gy, radius, 0, Math.PI * 2);
+      ctx.fill();
     }
   });
-  return { unmount(){ runner.stop(); } };
+
+  return { unmount() { runner.stop(); } };
 }
 
 function fractalVineMount(canvas){
