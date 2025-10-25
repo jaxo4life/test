@@ -357,7 +357,10 @@ const TEMPLATE_IDS = [
   'particleFountain','cyberVortex','quantumGrid','laserPulse',
   'digitalNebula','neonMatrix','energyFlow','particleStorm',
   'cyberSphere','quantumBurst','laserWeb','digitalVortex',
-  'neonFlow','energyRings','particleWeb','cyberAurora'
+  'neonFlow','energyRings','particleWeb','cyberAurora',
+  'fractalFern','fractalSnowflake','fractalDragon','fractalSpiral',
+  'fractalTriangle','fractalBranch','fractalLightning','fractalVine',
+  'fractalCrystal','fractalWeb'
 ];
 
 const TEMPLATE_META = {
@@ -460,7 +463,17 @@ const TEMPLATE_META = {
   neonFlow: {name:'Neon Flow'},
   energyRings: {name:'Energy Rings'},
   particleWeb: {name:'Particle Web'},
-  cyberAurora: {name:'Cyber Aurora'}
+  cyberAurora: {name:'Cyber Aurora'},
+  fractalFern: {name:'Fractal Fern'},
+  fractalSnowflake: {name:'Fractal Snowflake'},
+  fractalDragon: {name:'Fractal Dragon'},
+  fractalSpiral: {name:'Fractal Spiral'},
+  fractalTriangle: {name:'Fractal Triangle'},
+  fractalBranch: {name:'Fractal Branch'},
+  fractalLightning: {name:'Fractal Lightning'},
+  fractalVine: {name:'Fractal Vine'},
+  fractalCrystal: {name:'Fractal Crystal'},
+  fractalWeb: {name:'Fractal Web'}
 };
 
 let autoplay = false;
@@ -1925,6 +1938,164 @@ TEMPLATE_IDS.forEach((id, i)=>{
           }
           ctx.stroke();
         }
+        break;
+
+      case 'fractalFern':
+        ctx.strokeStyle = 'rgba(50,255,100,0.4)';
+        ctx.lineWidth = 1;
+        function drawFern(x,y,len,angle,depth){
+          if(depth===0) return;
+          const x2=x+Math.cos(angle)*len, y2=y+Math.sin(angle)*len;
+          ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+          drawFern(x2,y2,len*0.8,angle-0.3,depth-1);
+          drawFern(x2,y2,len*0.6,angle+0.5,depth-1);
+        }
+        drawFern(150,250,40,-Math.PI/2,6);
+        break;
+        
+      case 'fractalSnowflake':
+        ctx.strokeStyle = 'rgba(100,200,255,0.5)';
+        ctx.lineWidth = 2;
+        function drawKoch(x1,y1,x2,y2,depth){
+          if(depth===0){
+            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+            return;
+          }
+          const dx=(x2-x1)/3, dy=(y2-y1)/3;
+          const x3=x1+dx, y3=y1+dy;
+          const x4=x1+2*dx, y4=y1+2*dy;
+          const x5=x3+dx*0.5-dy*Math.sqrt(3)/2, y5=y3+dy*0.5+dx*Math.sqrt(3)/2;
+          drawKoch(x1,y1,x3,y3,depth-1);
+          drawKoch(x3,y3,x5,y5,depth-1);
+          drawKoch(x5,y5,x4,y4,depth-1);
+          drawKoch(x4,y4,x2,y2,depth-1);
+        }
+        const cx=150, cy=150, r=80;
+        for(let i=0;i<3;i++){
+          const a1=i*Math.PI*2/3-Math.PI/2, a2=(i+1)*Math.PI*2/3-Math.PI/2;
+          drawKoch(cx+Math.cos(a1)*r,cy+Math.sin(a1)*r,cx+Math.cos(a2)*r,cy+Math.sin(a2)*r,2);
+        }
+        break;
+        
+      case 'fractalDragon':
+        ctx.strokeStyle = 'rgba(255,100,150,0.5)';
+        ctx.lineWidth = 1;
+        let dragonSeq = [1];
+        for(let i=0;i<8;i++){
+          dragonSeq = [...dragonSeq, 1, ...dragonSeq.reverse().map(x=>-x)];
+        }
+        let dx=150, dy=200, angle=0;
+        ctx.beginPath(); ctx.moveTo(dx,dy);
+        dragonSeq.forEach(turn=>{
+          angle += turn*Math.PI/2;
+          dx += Math.cos(angle)*2;
+          dy += Math.sin(angle)*2;
+          ctx.lineTo(dx,dy);
+        });
+        ctx.stroke();
+        break;
+        
+      case 'fractalSpiral':
+        ctx.strokeStyle = 'rgba(255,200,0,0.4)';
+        ctx.lineWidth = 2;
+        function drawSpiral(x,y,r,angle,depth){
+          if(depth===0||r<1) return;
+          const x2=x+Math.cos(angle)*r, y2=y+Math.sin(angle)*r;
+          ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+          drawSpiral(x2,y2,r*0.85,angle+0.5,depth-1);
+        }
+        drawSpiral(150,150,60,0,20);
+        break;
+        
+      case 'fractalTriangle':
+        ctx.fillStyle = 'rgba(255,100,255,0.4)';
+        function drawSierpinski(x,y,size,depth){
+          if(depth===0){
+            ctx.beginPath();
+            ctx.moveTo(x,y);
+            ctx.lineTo(x+size,y);
+            ctx.lineTo(x+size/2,y-size*Math.sqrt(3)/2);
+            ctx.fill();
+            return;
+          }
+          const half=size/2;
+          drawSierpinski(x,y,half,depth-1);
+          drawSierpinski(x+half,y,half,depth-1);
+          drawSierpinski(x+half/2,y-half*Math.sqrt(3)/2,half,depth-1);
+        }
+        drawSierpinski(70,220,160,4);
+        break;
+        
+      case 'fractalBranch':
+        ctx.strokeStyle = 'rgba(150,255,150,0.4)';
+        function drawBranch(x,y,len,angle,depth){
+          if(depth===0) return;
+          const x2=x+Math.cos(angle)*len, y2=y+Math.sin(angle)*len;
+          ctx.lineWidth = depth*0.5;
+          ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+          drawBranch(x2,y2,len*0.75,angle-0.4,depth-1);
+          drawBranch(x2,y2,len*0.75,angle+0.4,depth-1);
+          drawBranch(x2,y2,len*0.6,angle,depth-1);
+        }
+        drawBranch(150,250,50,-Math.PI/2,6);
+        break;
+        
+      case 'fractalLightning':
+        ctx.strokeStyle = 'rgba(150,200,255,0.6)';
+        ctx.lineWidth = 2;
+        function drawLightning(x1,y1,x2,y2,depth){
+          if(depth===0){
+            ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+            return;
+          }
+          const mx=(x1+x2)/2+(Math.random()-0.5)*30;
+          const my=(y1+y2)/2+(Math.random()-0.5)*30;
+          drawLightning(x1,y1,mx,my,depth-1);
+          drawLightning(mx,my,x2,y2,depth-1);
+        }
+        drawLightning(150,50,150,250,4);
+        break;
+        
+      case 'fractalVine':
+        ctx.strokeStyle = 'rgba(100,255,150,0.4)';
+        function drawVine(x,y,len,angle,depth){
+          if(depth===0) return;
+          const x2=x+Math.cos(angle)*len, y2=y+Math.sin(angle)*len;
+          ctx.lineWidth = depth*0.8;
+          ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+          drawVine(x2,y2,len*0.8,angle-0.6,depth-1);
+          drawVine(x2,y2,len*0.7,angle+0.3,depth-1);
+        }
+        drawVine(50,150,40,0,7);
+        break;
+        
+      case 'fractalCrystal':
+        ctx.strokeStyle = 'rgba(150,220,255,0.4)';
+        ctx.lineWidth = 1;
+        function drawCrystal(x,y,r,angle,depth){
+          if(depth===0) return;
+          for(let i=0;i<6;i++){
+            const a=angle+i*Math.PI/3;
+            const x2=x+Math.cos(a)*r, y2=y+Math.sin(a)*r;
+            ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+          }
+        }
+        drawCrystal(150,150,40,0,3);
+        break;
+        
+      case 'fractalWeb':
+        ctx.strokeStyle = 'rgba(200,200,255,0.3)';
+        ctx.lineWidth = 1;
+        function drawWeb(x,y,r,depth){
+          if(depth===0) return;
+          for(let i=0;i<8;i++){
+            const a=i*Math.PI/4;
+            const x2=x+Math.cos(a)*r, y2=y+Math.sin(a)*r;
+            ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+            drawWeb(x2,y2,r*0.6,depth-1);
+          }
+        }
+        drawWeb(150,150,50,3);
         break;
     }
     
@@ -4895,7 +5066,7 @@ function quantumGridMount(canvas){
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
     const spacing = 40;
-    ctx.strokeStyle = 'rgba(176,67,255,0.3)';
+    ctx.strokeStyle = 'rgba(176,67,255,0.8)';
     ctx.lineWidth = 1;
     for(let x=0; x<W; x+=spacing){
       for(let y=0; y<H; y+=spacing){
@@ -5287,6 +5458,293 @@ function cyberAuroraMount(canvas){
   return { unmount(){ runner.stop(); } };
 }
 
+function fractalFernMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawFern(x, y, len, angle, depth, t) {
+    if(depth === 0 || len < 1) return;
+    const x2 = x + Math.cos(angle) * len;
+    const y2 = y + Math.sin(angle) * len;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    const alpha = 0.5 - depth*0.05;
+    ctx.strokeStyle = `rgba(50,255,100,${alpha})`;
+    ctx.lineWidth = depth*0.5;
+    ctx.stroke();
+    const offset = Math.sin(t + depth)*0.15;
+    drawFern(x2, y2, len*0.8, angle-0.3+offset, depth-1, t);
+    drawFern(x2, y2, len*0.6, angle+0.5+offset, depth-1, t);
+    drawFern(x2, y2, len*0.5, angle+offset, depth-1, t);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawFern(W/2, H-50, 120, -Math.PI/2, 9, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalSnowflakeMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawKoch(x1, y1, x2, y2, depth) {
+    if(depth === 0){
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      return;
+    }
+    const dx = (x2-x1)/3, dy = (y2-y1)/3;
+    const x3 = x1+dx, y3 = y1+dy;
+    const x4 = x1+2*dx, y4 = y1+2*dy;
+    const x5 = x3+dx*0.5-dy*Math.sqrt(3)/2;
+    const y5 = y3+dy*0.5+dx*Math.sqrt(3)/2;
+    drawKoch(x1,y1,x3,y3,depth-1);
+    drawKoch(x3,y3,x5,y5,depth-1);
+    drawKoch(x5,y5,x4,y4,depth-1);
+    drawKoch(x4,y4,x2,y2,depth-1);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = `rgba(100,200,255,${0.6+Math.sin(tt)*0.2})`;
+    ctx.lineWidth = 2;
+    const cx = W/2, cy = H/2, r = 200 + Math.sin(tt)*20;
+    for(let i=0;i<3;i++){
+      const a1 = i*Math.PI*2/3-Math.PI/2+tt*0.1;
+      const a2 = (i+1)*Math.PI*2/3-Math.PI/2+tt*0.1;
+      drawKoch(cx+Math.cos(a1)*r, cy+Math.sin(a1)*r, cx+Math.cos(a2)*r, cy+Math.sin(a2)*r, 4);
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalDragonMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    let seq = [1];
+    for(let i=0;i<12;i++){
+      seq = [...seq, 1, ...seq.reverse().map(x=>-x)];
+    }
+    let x = W/2-100, y = H/2;
+    let angle = tt*0.5;
+    ctx.strokeStyle = `rgba(255,100,150,0.6)`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    seq.forEach(turn=>{
+      angle += turn*Math.PI/2;
+      x += Math.cos(angle)*1.5;
+      y += Math.sin(angle)*1.5;
+      ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalSpiralMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawSpiral(x, y, r, angle, depth, t) {
+    if(depth === 0 || r < 1) return;
+    const x2 = x + Math.cos(angle) * r;
+    const y2 = y + Math.sin(angle) * r;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    const alpha = 0.6 - depth*0.02;
+    ctx.strokeStyle = `rgba(255,200,0,${alpha})`;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    drawSpiral(x2, y2, r*0.85, angle+0.5+Math.sin(t)*0.1, depth-1, t);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawSpiral(W/2, H/2, 200, tt, 30, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalTriangleMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawSierpinski(x, y, size, depth) {
+    if(depth === 0){
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x+size, y);
+      ctx.lineTo(x+size/2, y-size*Math.sqrt(3)/2);
+      ctx.fill();
+      return;
+    }
+    const half = size/2;
+    drawSierpinski(x, y, half, depth-1);
+    drawSierpinski(x+half, y, half, depth-1);
+    drawSierpinski(x+half/2, y-half*Math.sqrt(3)/2, half, depth-1);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    const hue = (tt*30)%360;
+    ctx.fillStyle = `hsla(${hue},80%,60%,0.6)`;
+    const size = 400 + Math.sin(tt)*50;
+    drawSierpinski(W/2-size/2, H/2+size*Math.sqrt(3)/4, size, 6);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalBranchMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawBranch(x, y, len, angle, depth, t) {
+    if(depth === 0) return;
+    const x2 = x + Math.cos(angle) * len;
+    const y2 = y + Math.sin(angle) * len;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.lineWidth = depth;
+    const alpha = 0.6 - depth*0.06;
+    ctx.strokeStyle = `rgba(150,255,150,${alpha})`;
+    ctx.stroke();
+    const offset = Math.sin(t + depth)*0.2;
+    drawBranch(x2, y2, len*0.75, angle-0.4+offset, depth-1, t);
+    drawBranch(x2, y2, len*0.75, angle+0.4+offset, depth-1, t);
+    drawBranch(x2, y2, len*0.6, angle+offset*0.5, depth-1, t);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawBranch(W/2, H-50, 120, -Math.PI/2, 9, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalLightningMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawLightning(x1, y1, x2, y2, depth, seed) {
+    if(depth === 0){
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      return;
+    }
+    const mx = (x1+x2)/2 + (Math.sin(seed)*0.5-0.25)*80;
+    const my = (y1+y2)/2 + (Math.cos(seed)*0.5-0.25)*80;
+    drawLightning(x1, y1, mx, my, depth-1, seed*1.3);
+    drawLightning(mx, my, x2, y2, depth-1, seed*1.7);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle = `rgba(150,200,255,${0.7+Math.sin(tt*5)*0.3})`;
+    ctx.lineWidth = 3;
+    for(let i=0;i<3;i++){
+      drawLightning(W/2+i*50-50, 50, W/2+i*50-50, H-50, 6, tt+i);
+    }
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalVineMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawVine(x, y, len, angle, depth, t) {
+    if(depth === 0) return;
+    const x2 = x + Math.cos(angle) * len;
+    const y2 = y + Math.sin(angle) * len;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.lineWidth = depth*0.8;
+    const alpha = 0.6 - depth*0.05;
+    ctx.strokeStyle = `rgba(100,255,150,${alpha})`;
+    ctx.stroke();
+    const offset = Math.sin(t + depth)*0.2;
+    drawVine(x2, y2, len*0.8, angle-0.6+offset, depth-1, t);
+    drawVine(x2, y2, len*0.7, angle+0.3+offset, depth-1, t);
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawVine(100, H/2, 100, 0+Math.sin(tt)*0.3, 10, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalCrystalMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawCrystal(x, y, r, angle, depth, t) {
+    if(depth === 0 || r < 2) return;
+    for(let i=0;i<6;i++){
+      const a = angle + i*Math.PI/3 + Math.sin(t)*0.1;
+      const x2 = x + Math.cos(a) * r;
+      const y2 = y + Math.sin(a) * r;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x2, y2);
+      const alpha = 0.5 - depth*0.1;
+      ctx.strokeStyle = `rgba(150,220,255,${alpha})`;
+      ctx.lineWidth = depth;
+      ctx.stroke();
+      drawCrystal(x2, y2, r*0.5, a, depth-1, t);
+    }
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawCrystal(W/2, H/2, 120, tt*0.5, 4, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalWebMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+  function drawWeb(x, y, r, depth, t) {
+    if(depth === 0 || r < 3) return;
+    for(let i=0;i<8;i++){
+      const a = i*Math.PI/4 + Math.sin(t)*0.1;
+      const x2 = x + Math.cos(a) * r;
+      const y2 = y + Math.sin(a) * r;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x2, y2);
+      const alpha = 0.5 - depth*0.08;
+      ctx.strokeStyle = `rgba(200,200,255,${alpha})`;
+      ctx.lineWidth = depth*0.5;
+      ctx.stroke();
+      drawWeb(x2, y2, r*0.6, depth-1, t);
+    }
+  }
+  const runner = makeRunner((t)=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
+    drawWeb(W/2, H/2, 180, 4, tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
 const templates = {
   cyberMinimal: { mount: cyberMinimalMount },
   cryptoOrb: { mount: cryptoOrbMount },
@@ -5387,7 +5845,17 @@ const templates = {
   neonFlow: { mount: neonFlowMount },
   energyRings: { mount: energyRingsMount },
   particleWeb: { mount: particleWebMount },
-  cyberAurora: { mount: cyberAuroraMount }
+  cyberAurora: { mount: cyberAuroraMount },
+  fractalFern: { mount: fractalFernMount },
+  fractalSnowflake: { mount: fractalSnowflakeMount },
+  fractalDragon: { mount: fractalDragonMount },
+  fractalSpiral: { mount: fractalSpiralMount },
+  fractalTriangle: { mount: fractalTriangleMount },
+  fractalBranch: { mount: fractalBranchMount },
+  fractalLightning: { mount: fractalLightningMount },
+  fractalVine: { mount: fractalVineMount },
+  fractalCrystal: { mount: fractalCrystalMount },
+  fractalWeb: { mount: fractalWebMount }
 };
 
 window.addEventListener('beforeunload', ()=>{
