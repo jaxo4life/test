@@ -5566,6 +5566,7 @@ function fractalSpiralMount(canvas){
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
+
   function drawSpiral(x, y, r, angle, depth, t) {
     if(depth === 0 || r < 1) return;
     const x2 = x + Math.cos(angle) * r;
@@ -5573,21 +5574,32 @@ function fractalSpiralMount(canvas){
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(x2, y2);
-    const alpha = 0.6 - depth*0.02;
-    ctx.strokeStyle = `rgba(255,200,0,${alpha})`;
-    ctx.lineWidth = 3;
+    const alpha = 0.6 - depth * 0.02;
+    const hue = (angle*30 + t*120) % 360;
+    ctx.strokeStyle = `hsla(${hue},100%,60%,${alpha})`;
+    ctx.shadowColor = `hsla(${hue},100%,70%,0.6)`;
+    ctx.shadowBlur = 10;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
-    drawSpiral(x2, y2, r*0.85, angle+0.5+Math.sin(t)*0.1, depth-1, t);
+    const dynamicR = r * (0.85 + 0.05*Math.sin(t*3 + depth));
+    drawSpiral(x2, y2, dynamicR, angle + 0.5 + Math.sin(t + depth*0.2)*0.2, depth-1, t);
   }
-  const runner = makeRunner((t)=>{
+
+  const runner = makeRunner(()=>{
     const tt = (performance.now()-t0)/1000;
-    ctx.fillStyle = '#000'; 
-		ctx.fillRect(0,0,W,H);
-		const size = Math.min(W, H);
-    const radius = size * 0.15;
-    const centerY = H * 0.55;
-    drawSpiral(W/2, centerY, radius, tt, 30, tt);
+    const size = Math.min(W,H);
+    const radius = size * 0.18;
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(W/2, H/2);
+    for(let j=0;j<3;j++){
+      const phase = tt + j*2.1;
+      drawSpiral(0,0,radius,phase,25,phase);
+    }
+    ctx.restore();
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
