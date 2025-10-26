@@ -2320,18 +2320,28 @@ TEMPLATE_IDS.forEach((id, i)=>{
 
 			case 'fractalElectric':
 				ctx.translate(0, 40);
-				function drawCrystal(x, y, len, angle, depth) {
-					if (depth === 0) return;
-					const x2 = x + Math.cos(angle) * len;
-					const y2 = y + Math.sin(angle) * len;
-					ctx.lineWidth = depth * 0.5;
-					const hue = 190 + depth * 8;
-					ctx.strokeStyle = `hsla(${hue},80%,70%,0.45)`;
-					ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
-					drawCrystal(x2, y2, len * 0.65, angle - 0.45, depth - 1);
-					drawCrystal(x2, y2, len * 0.65, angle + 0.45, depth - 1);
+				function drawPulseBranch(x, y, len, angle, depth){
+						if(depth <= 0) return;
+						const jitterX = (Math.random() - 0.5) * 6;
+						const jitterY = (Math.random() - 0.5) * 6;
+						const x2 = x + Math.cos(angle) * len + jitterX;
+						const y2 = y + Math.sin(angle) * len + jitterY;
+
+						const hue = 180 + depth * 12;
+						ctx.strokeStyle = `hsla(${hue},100%,70%,0.5)`;
+						ctx.lineWidth = Math.max(0.4, depth*0.7);
+
+						ctx.beginPath();
+						ctx.moveTo(x, y);
+						ctx.lineTo(x2, y2);
+						ctx.stroke();
+
+						const branches = 1 + Math.floor(Math.random()*2);
+						for(let i=0;i<branches;i++){
+								drawPulseBranch(x2, y2, len*0.6, angle + (Math.random()-0.5)*0.8, depth-1);
+						}
 				}
-				drawCrystal(0, 0, 50, -Math.PI / 2, 7);
+				drawPulseBranch(0, 0, 70, -Math.PI/2, 6);
 				ctx.restore();
 				break;
 
@@ -6570,7 +6580,7 @@ function fractalSpiritMount(canvas){
     const tt=(performance.now()-t0)/1000;
     ctx.fillStyle='rgba(0,0,10,0.15)';
     ctx.fillRect(0,0,W,H);
-    draw(W/2,H*0.85,80,-Math.PI/2,9,tt);
+    draw(W/2,H-40,80,-Math.PI/2,9,tt);
   });
   return {unmount(){runner.stop();}};
 }
