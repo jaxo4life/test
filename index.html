@@ -2260,7 +2260,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				ctx.restore();
 				break;
 				
-			// 1. 极光灵树
 			case 'fractalAuroraTree':
 				ctx.translate(0, 40);
 				function drawNeural(x, y, len, angle, depth) {
@@ -2284,7 +2283,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				ctx.restore();
 				break;
 
-			// 2. 星空电藤
 			case 'fractalPulseTree':
 				ctx.translate(0, 40);
 				function drawSpectraVine(x, y, len, angle, depth) {
@@ -2302,7 +2300,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				ctx.restore();
 				break;
 
-			// 3. 光谱之藤
 			case 'fractalCoral':
 				ctx.strokeStyle = 'rgba(255,200,100,0.5)';
 				ctx.translate(0, 40);
@@ -2321,7 +2318,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				ctx.restore();
 				break;
 
-			// 4. 晶流之冠
 			case 'fractalElectric':
 				ctx.translate(0, 40);
 				function drawCrystal(x, y, len, angle, depth) {
@@ -2339,7 +2335,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				ctx.restore();
 				break;
 
-			// 5. 幽蓝神经树
 			case 'fractalSpirit':
 				ctx.strokeStyle = 'rgba(190,120,255,0.5)';
 				ctx.translate(0, 40);
@@ -6512,27 +6507,43 @@ function fractalElectricMount(canvas){
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
 
-  function branch(x,y,len,angle,depth,t){
-    if(depth<=0) return;
-    const jitter = (Math.random()-0.5)*10;
-    const x2 = x + Math.cos(angle)*len + jitter;
-    const y2 = y + Math.sin(angle)*len + jitter;
-    const hue = 200 + 60*Math.sin(t*2 + depth);
-    ctx.strokeStyle = `hsla(${hue},100%,80%,${0.5+Math.random()*0.5})`;
-    ctx.lineWidth = Math.max(0.3,depth*0.8);
-    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+  function branch(x, y, len, angle, depth, t){
+    if(depth <= 0) return;
+    const jitterX = (Math.random() - 0.5) * 8;
+    const jitterY = (Math.random() - 0.5) * 8;
+    const x2 = x + Math.cos(angle) * len + jitterX;
+    const y2 = y + Math.sin(angle) * len + jitterY;
 
-    if(Math.random()<0.7)
-      branch(x2,y2,len*0.7,angle+(Math.random()-0.5)*0.6,depth-1,t);
+    const hue = 180 + 100 * Math.sin(t*2 + depth);
+    const alpha = 0.3 + 0.7 * Math.random();
+    ctx.strokeStyle = `hsla(${hue}, 100%, 70%, ${alpha})`;
+    ctx.lineWidth = Math.max(0.5, depth*0.7);
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const branches = 1 + Math.floor(Math.random()*2);
+    for(let i=0;i<branches;i++){
+      branch(x2, y2, len*0.6, angle + (Math.random()-0.5)*0.8, depth-1, t);
+    }
   }
 
   const runner = makeRunner(()=>{
-    const tt=(performance.now()-t0)/1000;
-    ctx.fillStyle='rgba(0,0,0,0.2)';
+    const t = (performance.now() - t0)/1000;
+
+    const bg = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W/1.5);
+    bg.addColorStop(0,'rgba(20,20,40,0.25)');
+    bg.addColorStop(1,'rgba(0,0,0,0.3)');
+    ctx.fillStyle = bg;
     ctx.fillRect(0,0,W,H);
-    for(let i=0;i<3;i++)
-      branch(W/2,H+20,100+Math.random()*40,-Math.PI/2,8,tt);
+
+    for(let i=-1;i<=1;i++){
+      branch(W/2 + i*40, H + 20, 120 + Math.random()*30, -Math.PI/2, 8, t);
+    }
   });
+
   return { unmount(){ runner.stop(); } };
 }
 
@@ -6559,7 +6570,7 @@ function fractalSpiritMount(canvas){
     const tt=(performance.now()-t0)/1000;
     ctx.fillStyle='rgba(0,0,10,0.15)';
     ctx.fillRect(0,0,W,H);
-    draw(W/2,H*0.85,100,-Math.PI/2,9,tt);
+    draw(W/2,H*0.85,80,-Math.PI/2,9,tt);
   });
   return {unmount(){runner.stop();}};
 }
