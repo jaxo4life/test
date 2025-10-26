@@ -6336,15 +6336,12 @@ function fractalAuroraTreeMount(canvas) {
   const runner = makeRunner(() => {
     const tt = (performance.now() - t0) / 1000;
 
-    // 绘制动态极光背景
-    <!-- drawAurora(tt); -->
-
     // 半透明覆盖，让枝条拖尾柔和
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
     ctx.fillRect(0, 0, W, H);
 
     // 绘制主树
-    drawBranch(W / 2, H + 40, 140, -Math.PI / 2, 10, tt);
+    drawBranch(W / 2, H, 140, -Math.PI / 2, 10, tt);
   });
 
   return {
