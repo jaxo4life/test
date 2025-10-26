@@ -58,7 +58,8 @@
 
   header {
     position:absolute;
-    top:18px;
+    padding-top:8px;
+		padding-bottom:8px;
     left:20px;
     right:20px;
     display:flex;
@@ -66,6 +67,7 @@
     justify-content:space-between;
     z-index:50;
     pointer-events:none;
+		background:black;
   }
 
   .title {
@@ -6580,7 +6582,7 @@ function fractalSpiritMount(canvas){
     const tt=(performance.now()-t0)/1000;
     ctx.fillStyle='rgba(0,0,10,0.15)';
     ctx.fillRect(0,0,W,H);
-    draw(W/2,H-40,80,-Math.PI/2,9,tt);
+    draw(W/2,H-50,70,-Math.PI/2,9,tt);
   });
   return {unmount(){runner.stop();}};
 }
