@@ -360,7 +360,7 @@ const TEMPLATE_IDS = [
   'cyberSphere','quantumBurst','laserWeb','digitalVortex',
   'neonFlow','energyRings','particleWeb','cyberAurora',
   'fractalFern','fractalSnowflake','fractalDragon','fractalSpiral',
-  'fractalTriangle','fractalBranch','fractalAuroraTree','fractalLightning','fractalVine',
+  'fractalTriangle','fractalBranch','fractalAuroraTree','fractalPulseTree','fractalCoral','fractalElectric','fractalSpirit','fractalLightning','fractalVine',
   'fractalCrystal','fractalWeb'
 ];
 
@@ -472,6 +472,10 @@ const TEMPLATE_META = {
   fractalTriangle: {name:'Fractal Triangle'},
   fractalBranch: {name:'Fractal Branch'},
 	fractalAuroraTree: {name:'Fractal AuroraTree'},
+	fractalPulseTree: { name: 'Fractal PulseTree' },
+	fractalCoral: { name: 'Fractal Coral' },
+	fractalElectric: { name: 'Fractal Electric' },
+	fractalSpirit: { name: 'Fractal Spirit' },
   fractalLightning: {name:'Fractal Lightning'},
   fractalVine: {name:'Fractal Vine'},
   fractalCrystal: {name:'Fractal Crystal'},
@@ -2253,6 +2257,104 @@ TEMPLATE_IDS.forEach((id, i)=>{
 					drawBranch(x2,y2,len*0.6,angle,depth-1);
 				}
 				drawBranch(0,0,50,-Math.PI/2,6);
+				ctx.restore();
+				break;
+				
+			// 1. 极光灵树
+			case 'fractalAuroraTree':
+				ctx.translate(0, 40);
+				function drawNeural(x, y, len, angle, depth) {
+					if (depth === 0) return;
+					const x2 = x + Math.cos(angle) * len;
+					const y2 = y + Math.sin(angle) * len;
+					ctx.lineWidth = depth * 0.4;
+					const hue = 210 + depth * 9;
+					ctx.strokeStyle = `hsla(${hue},100%,60%,0.4)`;
+					ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+					drawNeural(x2, y2, len * 0.75, angle - 0.35, depth - 1);
+					drawNeural(x2, y2, len * 0.75, angle + 0.35, depth - 1);
+					if (depth < 3) {
+						ctx.beginPath();
+						ctx.arc(x2, y2, 1.5, 0, Math.PI * 2);
+						ctx.fillStyle = `hsla(${hue + 40},100%,75%,0.6)`;
+						ctx.fill();
+					}
+				}
+				drawNeural(0, 0, 50, -Math.PI / 2, 8);
+				ctx.restore();
+				break;
+
+			// 2. 星空电藤
+			case 'fractalPulseTree':
+				ctx.translate(0, 40);
+				function drawSpectraVine(x, y, len, angle, depth) {
+					if (depth === 0) return;
+					const x2 = x + Math.cos(angle) * len;
+					const y2 = y + Math.sin(angle) * len;
+					ctx.lineWidth = depth * 0.45;
+					const hue = 180 + depth * 12;
+					ctx.strokeStyle = `hsla(${hue},90%,65%,0.4)`;
+					ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+					drawSpectraVine(x2, y2, len * 0.7, angle - 0.3, depth - 1);
+					drawSpectraVine(x2, y2, len * 0.7, angle + 0.3, depth - 1);
+				}
+				drawSpectraVine(0, 0, 50, -Math.PI / 2, 8);
+				ctx.restore();
+				break;
+
+			// 3. 光谱之藤
+			case 'fractalCoral':
+				ctx.strokeStyle = 'rgba(255,200,100,0.5)';
+				ctx.translate(0, 40);
+				function drawStarVine(x, y, len, angle, depth) {
+					if (depth === 0) return;
+					const x2 = x + Math.cos(angle) * len;
+					const y2 = y + Math.sin(angle) * len;
+					ctx.lineWidth = depth * 0.4;
+					const hue = 40 + depth * 15;
+					ctx.strokeStyle = `hsla(${hue},100%,60%,0.4)`;
+					ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+					drawStarVine(x2, y2, len * 0.8, angle - 0.5, depth - 1);
+					drawStarVine(x2, y2, len * 0.8, angle + 0.3, depth - 1);
+				}
+				drawStarVine(0, 0, 50, -Math.PI / 2, 7);
+				ctx.restore();
+				break;
+
+			// 4. 晶流之冠
+			case 'fractalElectric':
+				ctx.translate(0, 40);
+				function drawCrystal(x, y, len, angle, depth) {
+					if (depth === 0) return;
+					const x2 = x + Math.cos(angle) * len;
+					const y2 = y + Math.sin(angle) * len;
+					ctx.lineWidth = depth * 0.5;
+					const hue = 190 + depth * 8;
+					ctx.strokeStyle = `hsla(${hue},80%,70%,0.45)`;
+					ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+					drawCrystal(x2, y2, len * 0.65, angle - 0.45, depth - 1);
+					drawCrystal(x2, y2, len * 0.65, angle + 0.45, depth - 1);
+				}
+				drawCrystal(0, 0, 50, -Math.PI / 2, 7);
+				ctx.restore();
+				break;
+
+			// 5. 幽蓝神经树
+			case 'fractalSpirit':
+				ctx.strokeStyle = 'rgba(190,120,255,0.5)';
+				ctx.translate(0, 40);
+				function drawAuroraBranch(x, y, len, angle, depth) {
+					if (depth === 0) return;
+					const x2 = x + Math.cos(angle) * len;
+					const y2 = y + Math.sin(angle) * len;
+					ctx.lineWidth = depth * 0.6;
+					const hue = 260 + depth * 10;
+					ctx.strokeStyle = `hsla(${hue},100%,70%,0.4)`;
+					ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+					drawAuroraBranch(x2, y2, len * 0.75, angle - 0.4, depth - 1);
+					drawAuroraBranch(x2, y2, len * 0.75, angle + 0.4, depth - 1);
+				}
+				drawAuroraBranch(0, 0, 45, -Math.PI / 2, 7);
 				ctx.restore();
 				break;
 
@@ -6296,14 +6398,13 @@ function fractalAuroraTreeMount(canvas) {
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
 
-  // 绘制分形树枝
   function drawBranch(x, y, len, angle, depth, t) {
     if (depth === 0) return;
     const x2 = x + Math.cos(angle) * len;
     const y2 = y + Math.sin(angle) * len;
 
     const lineW = Math.max(0.4, depth * 0.8);
-    const hue = 280 + Math.sin(t * 0.8 + depth) * 80; // 紫粉调
+    const hue = 280 + Math.sin(t * 0.8 + depth) * 80;
     const alpha = 0.15 + Math.abs(Math.sin(t * 0.6 + depth)) * 0.5;
 
     const grad = ctx.createLinearGradient(x, y, x2, y2);
@@ -6322,7 +6423,6 @@ function fractalAuroraTreeMount(canvas) {
     drawBranch(x2, y2, nextLen, angle - 0.35 + sway, depth - 1, t);
     drawBranch(x2, y2, nextLen, angle + 0.35 + sway, depth - 1, t);
 
-    // 末端光点
     if (depth < 3 && Math.random() < 0.25) {
       const flicker = 0.5 + 0.5 * Math.sin(t * 6 + depth);
       ctx.beginPath();
@@ -6332,21 +6432,136 @@ function fractalAuroraTreeMount(canvas) {
     }
   }
 
-  // 动画主循环
   const runner = makeRunner(() => {
     const tt = (performance.now() - t0) / 1000;
 
-    // 半透明覆盖，让枝条拖尾柔和
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
     ctx.fillRect(0, 0, W, H);
 
-    // 绘制主树
     drawBranch(W / 2, H + 80, 140, -Math.PI / 2, 10, tt);
   });
 
   return {
     unmount() { runner.stop(); }
   };
+}
+
+function fractalPulseTreeMount(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+
+  function drawBranch(x, y, len, angle, depth, t) {
+    if (depth === 0) return;
+    const x2 = x + Math.cos(angle) * len;
+    const y2 = y + Math.sin(angle) * len;
+    const pulse = 0.6 + 0.4 * Math.sin(t * 3 + depth);
+    const hue = 180 + 80 * Math.sin(t * 0.7 + depth);
+    const grad = ctx.createLinearGradient(x, y, x2, y2);
+    grad.addColorStop(0, `hsla(${hue},100%,60%,${pulse})`);
+    grad.addColorStop(1, `hsla(${hue + 40},100%,80%,${pulse * 0.7})`);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = depth * 0.8;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+
+    const sway = Math.sin(t + depth) * 0.2;
+    drawBranch(x2, y2, len * 0.75, angle - 0.3 + sway, depth - 1, t);
+    drawBranch(x2, y2, len * 0.75, angle + 0.3 + sway, depth - 1, t);
+  }
+
+  const runner = makeRunner(() => {
+    const tt = (performance.now() - t0) / 1000;
+    ctx.fillStyle = `rgba(10,10,20,0.2)`;
+    ctx.fillRect(0, 0, W, H);
+    drawBranch(W/2, H+30, 120, -Math.PI/2, 9, tt);
+  });
+
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalCoralMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+
+  function branch(x,y,len,angle,depth,t){
+    if(depth<=0) return;
+    const x2 = x + Math.cos(angle)*len;
+    const y2 = y + Math.sin(angle)*len;
+    const hue = 30 + 50*Math.sin(t*0.5 + depth);
+    ctx.strokeStyle = `hsla(${hue},100%,70%,0.6)`;
+    ctx.lineWidth = depth * 0.9;
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+
+    const wave = Math.sin(t*1.3 + depth)*0.4;
+    const newLen = len*0.8;
+    branch(x2,y2,newLen,angle+0.6+wave,depth-1,t);
+    branch(x2,y2,newLen,angle-0.6-wave,depth-1,t);
+  }
+
+  const runner = makeRunner(()=>{
+    const tt = (performance.now()-t0)/1000;
+    ctx.fillStyle = `rgba(5,5,20,0.3)`; ctx.fillRect(0,0,W,H);
+    branch(W/2,H*0.9,90,-Math.PI/2,8,tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalElectricMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+
+  function branch(x,y,len,angle,depth,t){
+    if(depth<=0) return;
+    const jitter = (Math.random()-0.5)*10;
+    const x2 = x + Math.cos(angle)*len + jitter;
+    const y2 = y + Math.sin(angle)*len + jitter;
+    const hue = 200 + 60*Math.sin(t*2 + depth);
+    ctx.strokeStyle = `hsla(${hue},100%,80%,${0.5+Math.random()*0.5})`;
+    ctx.lineWidth = Math.max(0.3,depth*0.8);
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+
+    if(Math.random()<0.7)
+      branch(x2,y2,len*0.7,angle+(Math.random()-0.5)*0.6,depth-1,t);
+  }
+
+  const runner = makeRunner(()=>{
+    const tt=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,0,0.2)';
+    ctx.fillRect(0,0,W,H);
+    for(let i=0;i<3;i++)
+      branch(W/2,H+20,100+Math.random()*40,-Math.PI/2,8,tt);
+  });
+  return { unmount(){ runner.stop(); } };
+}
+
+function fractalSpiritMount(canvas){
+  const ctx = canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
+
+  function draw(x,y,len,angle,depth,t){
+    if(depth<=0) return;
+    const x2=x+Math.cos(angle)*len;
+    const y2=y+Math.sin(angle)*len;
+    const hue=280+50*Math.sin(t*0.6+depth);
+    const alpha=0.2+0.3*Math.sin(t*0.8+depth);
+    ctx.strokeStyle=`hsla(${hue},100%,85%,${alpha})`;
+    ctx.lineWidth=depth*0.7;
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x2,y2); ctx.stroke();
+    const flow=Math.sin(t*0.9+depth)*0.4;
+    draw(x2,y2,len*0.85,angle-0.5+flow,depth-1,t);
+    draw(x2,y2,len*0.85,angle+0.5+flow,depth-1,t);
+  }
+
+  const runner=makeRunner(()=>{
+    const tt=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,10,0.15)';
+    ctx.fillRect(0,0,W,H);
+    draw(W/2,H*0.85,100,-Math.PI/2,9,tt);
+  });
+  return {unmount(){runner.stop();}};
 }
 
 function fractalLightningMount(canvas) {
@@ -6608,6 +6823,10 @@ const templates = {
   fractalTriangle: { mount: fractalTriangleMount },
   fractalBranch: { mount: fractalBranchMount },
 	fractalAuroraTree: { mount: fractalAuroraTreeMount },
+	fractalPulseTree: { mount: fractalPulseTreeMount },
+	fractalCoral: { mount:fractalCoralMount },
+	fractalElectric: { mount: fractalElectricMount },
+	fractalSpirit: { mount:fractalSpiritMount },
   fractalLightning: { mount: fractalLightningMount },
   fractalVine: { mount: fractalVineMount },
   fractalCrystal: { mount: fractalCrystalMount },
