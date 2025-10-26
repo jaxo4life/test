@@ -3216,7 +3216,7 @@ function fractalTreeMount(canvas){
   const runner = makeRunner((t)=>{
     const tt = (performance.now()-t0)/1000;
     ctx.fillStyle = '#000'; ctx.fillRect(0,0,W,H);
-    drawBranch(W/2, H-50, 120, -Math.PI/2, 8, tt);
+    drawBranch(W/2, H, 120, -Math.PI/2, 8, tt);
   });
   return { unmount(){ runner.stop(); } };
 }
