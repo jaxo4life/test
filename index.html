@@ -6296,34 +6296,6 @@ function fractalAuroraTreeMount(canvas) {
   const W = canvas.width, H = canvas.height;
   let t0 = performance.now();
 
-  // 绘制极光背景层
-  function drawAurora(t) {
-    const grad = ctx.createLinearGradient(0, 0, W, H);
-    const hueShift = Math.sin(t * 0.1) * 60;
-    grad.addColorStop(0, `hsl(${200 + hueShift}, 90%, 10%)`);
-    grad.addColorStop(0.5, `hsl(${260 + hueShift}, 80%, 15%)`);
-    grad.addColorStop(1, `hsl(${310 + hueShift}, 70%, 12%)`);
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    // 流动的极光波
-    const waves = 3;
-    for (let i = 0; i < waves; i++) {
-      const offset = t * 0.4 + i * 2;
-      const hue = 200 + 80 * Math.sin(offset * 0.5 + i);
-      const alpha = 0.15 + 0.05 * Math.sin(t + i);
-      ctx.beginPath();
-      for (let x = 0; x <= W; x += 10) {
-        const y = H * 0.3 + Math.sin(x * 0.01 + offset) * 40 * Math.sin(t * 0.5 + i);
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.strokeStyle = `hsla(${hue},100%,70%,${alpha})`;
-      ctx.lineWidth = 60;
-      ctx.stroke();
-    }
-  }
-
   // 绘制分形树枝
   function drawBranch(x, y, len, angle, depth, t) {
     if (depth === 0) return;
@@ -6365,7 +6337,7 @@ function fractalAuroraTreeMount(canvas) {
     const tt = (performance.now() - t0) / 1000;
 
     // 绘制动态极光背景
-    drawAurora(tt);
+    <!-- drawAurora(tt); -->
 
     // 半透明覆盖，让枝条拖尾柔和
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
