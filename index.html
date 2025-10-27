@@ -2436,7 +2436,6 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				break;
 
 			case 'fractalPrismWaves':
-				ctx.save();
 				ctx.translate(0, 0);
 				function drawMiniWave(x, y, radius, rings){
 					for(let r=0; r<rings; r++){
@@ -2459,6 +2458,138 @@ TEMPLATE_IDS.forEach((id, i)=>{
 				drawMiniWave(0, 0, 80, 8);
 				ctx.restore();
 				break;
+
+      case 'fractalCrystalBloom':
+        ctx.save();
+        ctx.translate(0, 0);
+        function drawCrystalPetal(x, y, len, angle, depth, t) {
+          if (depth <= 0) return;
+          const x2 = x + Math.cos(angle) * len;
+          const y2 = y + Math.sin(angle) * len;
+          const hue = 190 + Math.sin(t + depth) * 40;
+          const alpha = 0.25 + 0.25 * Math.cos(t * 0.6 + depth);
+          ctx.strokeStyle = `hsla(${hue},100%,70%,${alpha})`;
+          ctx.lineWidth = Math.max(0.3, depth * 0.4);
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+
+          const nextLen = len * 0.72;
+          drawCrystalPetal(x2, y2, nextLen, angle - 0.45, depth - 1, t);
+          drawCrystalPetal(x2, y2, nextLen, angle + 0.45, depth - 1, t);
+        }
+
+        const t = performance.now() / 1000;
+        const petals1 = 7;
+        for (let i = 0; i < petals1; i++) {
+          const ang = (i / petals1) * Math.PI * 2;
+          drawCrystalPetal(0, 0, 30, ang - Math.PI / 2, 6, t + i);
+        }
+
+        ctx.restore();
+        break;
+
+      case 'plasmaPhoenix':
+        ctx.translate(0,0);
+        function drawFlameWing(x,y,angle,scale){
+          for(let i=0;i<5;i++){
+            const hue=20+i*15;
+            ctx.beginPath();
+            ctx.strokeStyle=`hsla(${hue},100%,60%,0.5)`;
+            ctx.lineWidth=1.2;
+            const len=scale*(20+i*6);
+            for(let a=0;a<=Math.PI/1.5;a+=0.2){
+              const xx=x+Math.cos(angle+a)*len*Math.cos(a*2);
+              const yy=y+Math.sin(angle+a)*len*Math.sin(a*2);
+              if(a===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);
+            }
+            ctx.stroke();
+          }
+        }
+        drawFlameWing(0,0,Math.PI/2,1);
+        drawFlameWing(0,0,-Math.PI/2,1);
+        ctx.restore();
+        break;
+
+      case 'bioFractalVine':
+        ctx.translate(0,0);
+        function vine(x,y,len,a,d){
+          if(d<=0)return;
+          const x2=x+Math.cos(a)*len;
+          const y2=y+Math.sin(a)*len;
+          ctx.strokeStyle=`hsla(${120+d*10},70%,55%,0.6)`;
+          ctx.lineWidth=d*0.4;
+          ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+          vine(x2,y2,len*0.75,a-0.3,d-1);
+          vine(x2,y2,len*0.75,a+0.3,d-1);
+        }
+        vine(0,50,50,-Math.PI/2,6);
+        ctx.restore();
+        break;
+
+      case 'electricFractalStorm':
+        ctx.translate(0,0);
+        function bolt(x,y,len,a,d){
+          if(d<=0)return;
+          const x2=x+Math.cos(a)*len;
+          const y2=y+Math.sin(a)*len;
+          ctx.strokeStyle=`hsla(${200+d*10},100%,70%,${0.3+0.05*d})`;
+          ctx.lineWidth=d*0.4;
+          ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+          if(Math.random()<0.6)bolt(x2,y2,len*0.8,a+(Math.random()-0.5),d-1);
+        }
+        for(let i=0;i<3;i++) bolt(0,0,50,Math.random()*Math.PI*2,5);
+        ctx.restore();
+        break;
+
+      case 'starPetalBloom':
+        ctx.translate(0,0);
+        for(let i=0;i<8;i++){
+          const a=i*(Math.PI/4);
+          const r=60;
+          const x=Math.cos(a)*r;
+          const y=Math.sin(a)*r;
+          const hue=300+i*20;
+          ctx.fillStyle=`hsla(${hue},100%,70%,0.7)`;
+          ctx.beginPath();
+          ctx.arc(x,y,5,0,Math.PI*2);
+          ctx.fill();
+        }
+        ctx.fillStyle='hsla(280,100%,90%,0.8)';
+        ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.fill();
+        ctx.restore();
+        break;
+
+      case 'magmaFractalFlow':
+        ctx.translate(0,0);
+        function crack(x,y,len,a,d){
+          if(d<=0)return;
+          const x2=x+Math.cos(a)*len;
+          const y2=y+Math.sin(a)*len;
+          const hue=30+d*8;
+          ctx.strokeStyle=`hsla(${hue},100%,50%,${0.3+0.05*d})`;
+          ctx.lineWidth=d*0.5;
+          ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+          crack(x2,y2,len*0.8,a+(Math.random()-0.5)*0.6,d-1);
+        }
+        for(let i=0;i<5;i++)crack(0,0,25,Math.random()*Math.PI*2,5);
+        ctx.restore();
+        break;
+
+      case 'quantumSpiral':
+        ctx.translate(0,0);
+        for(let i=0;i<100;i++){
+          const a=i*0.25;
+          const r=i*0.8;
+          const x=Math.cos(a)*r;
+          const y=Math.sin(a)*r;
+          const hue=180+(i*3)%120;
+          ctx.fillStyle=`hsla(${hue},100%,70%,0.6)`;
+          ctx.fillRect(x,y,1.5,1.5);
+        }
+        ctx.restore();
+        break;
     }
     
     ctx.restore();
