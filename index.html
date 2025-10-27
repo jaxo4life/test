@@ -6840,7 +6840,7 @@ function fractalCrystalBloomMount(canvas) {
     const t = (performance.now() - t0) / 1000;
     ctx.fillStyle = 'rgba(5,10,25,0.2)';
     ctx.fillRect(0, 0, W, H);
-    drawCrystal(W / 2, H / 2 + 100, 80, -Math.PI / 2, 9, t);
+    drawCrystal(W / 2, H / 2 + 200, 80, -Math.PI / 2, 9, t);
   });
 
   return { unmount() { runner.stop(); } };
@@ -6868,8 +6868,8 @@ function plasmaPhoenixMount(canvas){
     const t=(performance.now()-t0)/1000;
     ctx.fillStyle='rgba(0,0,0,0.15)';
     ctx.fillRect(0,0,W,H);
-    drawWing(W/2,H/2,90,-Math.PI/2,10,t);
-    drawWing(W/2,H/2,90,-Math.PI/2,10,t+Math.PI);
+    drawWing(W/2,H,90,-Math.PI/2,10,t);
+    drawWing(W/2,H,90,-Math.PI/2,10,t+Math.PI);
   });
 
   return {unmount(){runner.stop();}};
