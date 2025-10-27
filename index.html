@@ -338,8 +338,8 @@ const create = (tag, attrs={}, parent=null) => {
 const TEMPLATE_IDS = [
   'fractalFern','fractalSnowflake','fractalDragon','fractalSpiral',
   'fractalTriangle','fractalBranch','fractalAuroraTree','fractalPulseTree','fractalCoral','fractalElectric','fractalSpirit','fractalLightning','fractalVine',
-  'fractalCrystal','fractalWeb','fractalLightningForest','fractalBioVine','fractalLiquidMirror','fractalPrismWaves',
-  'fractalQuantumBloom','cyberMinimal','cryptoOrb','retroTerminal','zenSpace',
+  'fractalCrystal','fractalWeb','fractalPrismWaves','fractalCrystalBloom','plasmaPhoenix','bioFractalVine','electricFractalStorm','starPetalBloom','magmaFractalFlow','quantumSpiral',
+  'cyberMinimal','cryptoOrb','retroTerminal','zenSpace',
   'liquidWaves','matrixRain','hexGridPulse',
   'clockSync','codeVerse','aiBloom','signatureLoop',
   'neonCity','glitchArt','vaporwave','hologram',
@@ -482,11 +482,14 @@ const TEMPLATE_META = {
   fractalVine: {name:'Fractal Vine'},
   fractalCrystal: {name:'Fractal Crystal'},
   fractalWeb: {name:'Fractal Web'},
-  fractalLightningForest: { name: 'Fractal Lightning Forest' },
-  fractalBioVine: { name: 'Fractal Bio Vine' },
-  fractalLiquidMirror: { name: 'Fractal Liquid Mirror' },
   fractalPrismWaves: { name: 'Fractal Prism Waves' },
-  fractalQuantumBloom: { name: 'Fractal Quantum Bloom' }
+  fractalCrystalBloom: { name: 'Fractal Crystal Bloom' },
+  plasmaPhoenix: { name: 'Plasma Phoenix' },
+  bioFractalVine: { name: 'Bio Fractal Vine' },
+  electricFractalStorm: { name: 'Electric Fractal Storm' },
+  starPetalBloom: { name: 'Star Petal Bloom' },
+  magmaFractalFlow: { name: 'Magma Fractal Flow' },
+  quantumSpiral: { name: 'Quantum Spiral' }
 };
 
 let autoplay = false;
@@ -2429,6 +2432,31 @@ TEMPLATE_IDS.forEach((id, i)=>{
 					}
 				}
 				drawWeb(0,0,50,3);
+				ctx.restore();
+				break;
+
+			case 'fractalPrismWaves':
+				ctx.save();
+				ctx.translate(0, 0);
+				function drawMiniWave(x, y, radius, rings){
+					for(let r=0; r<rings; r++){
+						const rr = radius * (r/rings + 0.1);
+						const hue = (r*25) % 360;
+						ctx.beginPath();
+						ctx.strokeStyle = `hsla(${hue},80%,60%,${0.25 + 0.1*Math.sin(r*0.8)})`;
+						ctx.lineWidth = 0.8;
+						const steps = 40;
+						for(let i=0;i<=steps;i++){
+							const a = (i/steps)*Math.PI*2;
+							const wave = Math.sin(a*3 + r*0.7)*3;
+							const x1 = x + Math.cos(a)*(rr + wave);
+							const y1 = y + Math.sin(a)*(rr + wave);
+							if(i===0) ctx.moveTo(x1,y1); else ctx.lineTo(x1,y1);
+						}
+						ctx.stroke();
+					}
+				}
+				drawMiniWave(0, 0, 80, 8);
 				ctx.restore();
 				break;
     }
@@ -6743,192 +6771,12 @@ function fractalWebMount(canvas){
   return { unmount(){ runner.stop(); } };
 }
 
-/* ---------------------------
-   2) fractalLightningForestMount
-   电弧般的分叉：高对比、强闪烁、放射性电弧
-   --------------------------- */
-function fractalLightningForestMount(canvas) {
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width, H = canvas.height;
-  let t0 = performance.now();
-  function resize() { W = canvas.width = canvas.clientWidth; H = canvas.height = canvas.clientHeight; }
-  resize();
-
-  function branch(x,y,len,angle,depth,t){
-    if (depth<=0 || len<1) return;
-    const x2 = x + Math.cos(angle)*len;
-    const y2 = y + Math.sin(angle)*len;
-
-    // 电弧纹理：白 -> 蓝
-    const g = ctx.createLinearGradient(x,y,x2,y2);
-    g.addColorStop(0, `rgba(255,255,255,${0.9*Math.max(0.2, 0.6 - depth*0.05)})`);
-    g.addColorStop(1, `rgba(120,200,255,${0.6 - depth*0.03})`);
-    ctx.strokeStyle = g;
-    ctx.lineWidth = Math.max(0.5, depth*1.2 + Math.sin(t*12+depth)*0.4);
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    // 抖动让线条曲折
-    const midx = x + Math.cos(angle)*(len*0.4) + (Math.random()-0.5)*len*0.2;
-    const midy = y + Math.sin(angle)*(len*0.4) + (Math.random()-0.5)*len*0.2;
-    ctx.quadraticCurveTo(midx, midy, x2, y2);
-    ctx.stroke();
-
-    // 光晕
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(180,230,255,${0.05 + Math.abs(Math.sin(t*20+depth))*0.12})`;
-    ctx.arc(x2, y2, 6 + Math.abs(Math.sin(t*12+depth))*6, 0, Math.PI*2);
-    ctx.fill();
-
-    if (Math.random() < 0.65) branch(x2,y2,len*0.62, angle + (Math.random()-0.5)*1.6, depth-1, t);
-    if (Math.random() < 0.4) branch(x2,y2,len*0.5, angle + (Math.random()-0.5)*2.0, depth-1, t);
-  }
-
-  const runner = makeRunner(() => {
-    const tt = (performance.now()-t0)/1000;
-    // 背景：深夜
-    ctx.fillStyle = `rgba(6,10,18,${0.18})`;
-    ctx.fillRect(0,0,W,H);
-
-    ctx.globalCompositeOperation = 'lighter';
-    // 多个电弧从上方向下放射
-    for (let i=0;i<5;i++){
-      if (Math.random() > 0.85) continue; // 控制闪电频率
-      const sx = Math.random()*W;
-      branch(sx, -10 + Math.random()*30, H*0.28 + Math.random()*H*0.2, Math.PI/2 + (Math.random()-0.5)*0.6, 7 + Math.floor(Math.random()*3), tt + i);
-    }
-
-    // 地面反光
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(8,12,18,0.2)`;
-    ctx.fillRect(0, H*0.82, W, H*0.18);
-  });
-
-  return { unmount() { runner.stop(); } };
-}
-
-/* ---------------------------
-   4) fractalBioVineMount
-   生命藤蔓：贝塞尔曲线、像生长一样的动画
-   --------------------------- */
-function fractalBioVineMount(canvas) {
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width, H = canvas.height;
-  let t0 = performance.now();
-  function resize() { W = canvas.width = canvas.clientWidth; H = canvas.height = canvas.clientHeight; }
-  resize();
-
-  function drawVine(x,y,len,angle,depth,t){
-    if (depth<=0 || len<1) return;
-    const x2 = x + Math.cos(angle)*len;
-    const y2 = y + Math.sin(angle)*len;
-
-    // 以贝塞尔曲线画出柔软藤蔓
-    const cp1x = x + Math.cos(angle - 0.5)*(len*0.4) + Math.sin(t*1.2 + depth)*6;
-    const cp1y = y + Math.sin(angle - 0.5)*(len*0.4) + Math.cos(t*1.0 + depth)*6;
-    const cp2x = x + Math.cos(angle + 0.5)*(len*0.6) + Math.sin(t*0.9 + depth*1.4)*6;
-    const cp2y = y + Math.sin(angle + 0.5)*(len*0.6) + Math.cos(t*0.7 + depth*1.2)*6;
-
-    ctx.beginPath();
-    const hue = 140 + Math.sin(t*0.6 + depth)*20;
-    ctx.strokeStyle = `hsla(${hue},60%,45%,${0.4 + depth*0.06})`;
-    ctx.lineWidth = Math.max(0.6, depth*0.9);
-    ctx.moveTo(x,y);
-    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2);
-    ctx.stroke();
-
-    // 叶子生长
-    if (Math.random() < 0.45 && depth < 5) {
-      ctx.beginPath();
-      ctx.fillStyle = `hsla(${hue+20},70%,60%,${0.7*Math.abs(Math.sin(t*2+depth))})`;
-      ctx.ellipse(x2, y2, 6 + depth, 3 + depth*0.6, Math.sin(depth+t)*0.6, 0, Math.PI*2);
-      ctx.fill();
-    }
-
-    drawVine(x2, y2, len*0.72, angle - 0.28 + Math.sin(t*0.6 + depth)*0.08, depth-1, t);
-    drawVine(x2, y2, len*0.7, angle + 0.32 + Math.cos(t*0.5 + depth)*0.08, depth-1, t);
-  }
-
-  const runner = makeRunner(() => {
-    const tt = (performance.now()-t0)/1000;
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(10,14,8,0.12)`;
-    ctx.fillRect(0,0,W,H);
-
-    ctx.save();
-    ctx.translate(W/2, H*0.9);
-    drawVine(0,50, H*0.28, -Math.PI/2, 9, tt);
-    ctx.restore();
-  });
-
-  return { unmount() { runner.stop(); } };
-}
-
-/* ---------------------------
-   5) fractalLiquidMirrorMount
-   流体镜面：波动扰动坐标，形成水镜般的分形
-   --------------------------- */
-function fractalLiquidMirrorMount(canvas) {
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width, H = canvas.height;
-  let t0 = performance.now();
-  function resize() { W = canvas.width = canvas.clientWidth; H = canvas.height = canvas.clientHeight; }
-  resize();
-
-  function drawRipple(cx, cy, radius, depth, t) {
-    if (depth <= 0 || radius < 2) return;
-    ctx.beginPath();
-    const hue = 200 + depth*6 + Math.sin(t*0.5 + depth)*20;
-    ctx.strokeStyle = `hsla(${hue},60%,60%,${0.12 + depth*0.02})`;
-    ctx.lineWidth = Math.max(0.4, depth*0.5);
-    // 使用波动修改半径与椭圆形
-    const rx = radius * (1 + Math.sin(t*1.8 + depth)*0.06);
-    const ry = radius * (0.6 + Math.cos(t*1.2 + depth)*0.03);
-    ctx.ellipse(cx + Math.sin(t*0.7+depth)*4, cy + Math.cos(t*0.9+depth)*4, rx, ry, Math.sin(depth+t)*0.3, 0, Math.PI*2);
-    ctx.stroke();
-
-    if (Math.random() < 0.5) drawRipple(cx + (Math.random()-0.5)*20, cy + (Math.random()-0.5)*20, radius*0.6, depth-1, t);
-  }
-
-  const runner = makeRunner(() => {
-    const tt = (performance.now()-t0)/1000;
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(6,6,12,0.14)`;
-    ctx.fillRect(0,0,W,H);
-
-    ctx.globalCompositeOperation = 'lighter';
-    // 多层水波从画布中心扩散，带干扰
-    for (let i=0;i<6;i++){
-      drawRipple(W/2 + Math.sin(tt*0.3 + i)*30, H/2 + Math.cos(tt*0.25 + i)*20, Math.min(W,H)*0.15 * (1 + i*0.18), 6, tt + i*0.2);
-    }
-
-    // 少量亮点反射
-    for (let k=0;k<12;k++){
-      ctx.beginPath();
-      const x = W/2 + Math.cos(k*1.3 + tt*0.9)* (Math.min(W,H)*0.18 + Math.sin(tt*0.4+k)*20);
-      const y = H/2 + Math.sin(k*1.3 + tt*0.7)* (Math.min(W,H)*0.12 + Math.cos(tt*0.35+k)*18);
-      const r = 2 + Math.abs(Math.sin(tt*2 + k))*3;
-      ctx.globalAlpha = 0.5;
-      ctx.fillStyle = `hsla(${210 + k*8},80%,70%,1)`;
-      ctx.arc(x,y,r,0,Math.PI*2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-    }
-  });
-
-  return { unmount() { runner.stop(); } };
-}
-
-/* ---------------------------
-   7) fractalPrismWavesMount
-   光谱折射波：极坐标波动与色带
-   --------------------------- */
 function fractalPrismWavesMount(canvas) {
   const ctx = canvas.getContext('2d');
   let W = canvas.width, H = canvas.height;
   let t0 = performance.now();
   function resize() { W = canvas.width = canvas.clientWidth; H = canvas.height = canvas.clientHeight; }
   resize();
-
   function drawWave(centerX, centerY, radius, rings, t) {
     for (let r=0;r<rings;r++){
       const rr = radius * (r/rings + 0.05);
@@ -6936,7 +6784,6 @@ function fractalPrismWavesMount(canvas) {
       ctx.beginPath();
       ctx.lineWidth = 1.2;
       ctx.strokeStyle = `hsla(${hue},85%,60%,${0.22 + 0.12*Math.sin(t*1.6 + r)})`;
-      // 用许多小弧片拼成波纹
       const steps = 360 / (4 + Math.floor(r/3));
       for (let s=0;s<steps;s++){
         const a0 = (s/steps)*Math.PI*2 + Math.sin(t*0.2 + r*0.3)*0.06;
@@ -6951,77 +6798,206 @@ function fractalPrismWavesMount(canvas) {
       ctx.stroke();
     }
   }
-
   const runner = makeRunner(() => {
     const tt = (performance.now()-t0)/1000;
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = `rgba(8,6,12,0.12)`;
     ctx.fillRect(0,0,W,H);
-
     ctx.globalCompositeOperation = 'lighter';
     drawWave(W/2, H/2, Math.min(W,H)*0.36, 12, tt);
-
-    // 中心发亮点
     ctx.beginPath();
     ctx.fillStyle = `hsla(${(tt*80)%360},90%,70%,0.12)`;
     ctx.arc(W/2, H/2, 8 + Math.abs(Math.sin(tt*3))*6, 0, Math.PI*2);
     ctx.fill();
   });
+  return { unmount() { runner.stop(); } };
+}
+
+function fractalCrystalBloomMount(canvas) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let t0 = performance.now();
+
+  function drawCrystal(x, y, len, angle, depth, t) {
+    if (depth <= 0) return;
+    const x2 = x + Math.cos(angle) * len;
+    const y2 = y + Math.sin(angle) * len;
+    const hue = 190 + Math.sin(t + depth) * 40;
+    const alpha = 0.2 + Math.cos(t * 0.5 + depth) * 0.4;
+    ctx.strokeStyle = `hsla(${hue},100%,70%,${alpha})`;
+    ctx.lineWidth = Math.max(0.4, depth * 0.5);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const nextLen = len * (0.75 + 0.05 * Math.sin(t + depth));
+    drawCrystal(x2, y2, nextLen, angle - 0.5, depth - 1, t);
+    drawCrystal(x2, y2, nextLen, angle + 0.5, depth - 1, t);
+  }
+
+  const runner = makeRunner(() => {
+    const t = (performance.now() - t0) / 1000;
+    ctx.fillStyle = 'rgba(5,10,25,0.2)';
+    ctx.fillRect(0, 0, W, H);
+    drawCrystal(W / 2, H / 2 + 100, 80, -Math.PI / 2, 9, t);
+  });
 
   return { unmount() { runner.stop(); } };
 }
 
-/* ---------------------------
-   10) fractalQuantumBloomMount
-   量子花朵：极坐标螺旋分形，形成开花式光瓣
-   --------------------------- */
-function fractalQuantumBloomMount(canvas) {
+function plasmaPhoenixMount(canvas){
   const ctx = canvas.getContext('2d');
-  let W = canvas.width, H = canvas.height;
-  let t0 = performance.now();
-  function resize() { W = canvas.width = canvas.clientWidth; H = canvas.height = canvas.clientHeight; }
-  resize();
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
 
-  function petal(cx, cy, r0, petals, iter, t) {
-    for (let i=0;i<petals;i++){
-      const baseAngle = (i/petals)*Math.PI*2 + Math.sin(t*0.6 + i)*0.08;
-      ctx.beginPath();
-      const hue = (i*360/petals + t*40) % 360;
-      ctx.strokeStyle = `hsla(${hue},80%,65%,${0.25})`;
-      ctx.lineWidth = 1.2;
-      // 绘制多段螺旋
-      for (let s=0;s<iter;s++){
-        const rr = r0 * (s/iter) * (1 + 0.12*Math.sin(t*2 + s));
-        const a = baseAngle + s*0.18 + Math.sin(t*1.2 + s*0.4)*0.04;
-        const x = cx + Math.cos(a)*rr;
-        const y = cy + Math.sin(a)*rr;
-        if (s===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-    }
+  function drawWing(x,y,len,a,d,t){
+    if(d<=0) return;
+    const x2=x+Math.cos(a)*len;
+    const y2=y+Math.sin(a)*len;
+    const hue=20+Math.sin(t*1.5+d)*60;
+    ctx.strokeStyle=`hsla(${hue},100%,60%,${0.15+0.1*d})`;
+    ctx.lineWidth=d*0.6;
+    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+
+    drawWing(x2,y2,len*0.8,a-0.4+Math.sin(t+d)*0.1,d-1,t);
+    drawWing(x2,y2,len*0.8,a+0.4-Math.sin(t+d)*0.1,d-1,t);
   }
 
-  const runner = makeRunner(() => {
-    const tt = (performance.now()-t0)/1000;
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(4,6,10,0.12)`;
+  const runner=makeRunner(()=>{
+    const t=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,0,0.15)';
     ctx.fillRect(0,0,W,H);
-
-    ctx.globalCompositeOperation = 'lighter';
-    // 中心节拍放大缩小
-    const cx = W/2, cy = H/2;
-    const scale = 1 + 0.12*Math.sin(tt*2.6);
-    petal(cx, cy, Math.min(W,H)*0.32*scale, 7 + Math.floor(Math.abs(Math.sin(tt))*4), 48, tt);
-
-    // 中心微光点
-    ctx.beginPath();
-    ctx.fillStyle = `hsla(${(tt*60)%360},90%,70%,0.18)`;
-    ctx.arc(cx, cy, 6 + Math.abs(Math.cos(tt*3))*6, 0, Math.PI*2);
-    ctx.fill();
+    drawWing(W/2,H/2,90,-Math.PI/2,10,t);
+    drawWing(W/2,H/2,90,-Math.PI/2,10,t+Math.PI);
   });
 
-  return { unmount() { runner.stop(); } };
+  return {unmount(){runner.stop();}};
+}
+
+function bioFractalVineMount(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
+
+  function vine(x,y,len,a,d,t){
+    if(d<=0)return;
+    const x2=x+Math.cos(a)*len;
+    const y2=y+Math.sin(a)*len;
+    ctx.strokeStyle=`hsla(${120+Math.sin(t+d)*40},70%,60%,${0.4})`;
+    ctx.lineWidth=d*0.4;
+    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+    vine(x2,y2,len*0.8,a+0.3*Math.sin(t+d),d-1,t);
+    vine(x2,y2,len*0.8,a-0.3*Math.sin(t+d),d-1,t);
+    if(d<3){ctx.fillStyle=`hsla(${100+Math.sin(t*5+d)*80},80%,70%,0.8)`;ctx.beginPath();ctx.arc(x2,y2,2,0,Math.PI*2);ctx.fill();}
+  }
+
+  const runner=makeRunner(()=>{
+    const t=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,10,0,0.2)';
+    ctx.fillRect(0,0,W,H);
+    vine(W/2,H,80,-Math.PI/2,9,t);
+  });
+  return {unmount(){runner.stop();}};
+}
+
+function electricFractalStormMount(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
+
+  function bolt(x,y,len,a,d,t){
+    if(d<=0)return;
+    const x2=x+Math.cos(a)*len;
+    const y2=y+Math.sin(a)*len;
+    const hue=200+Math.sin(t+d)*100;
+    ctx.strokeStyle=`hsla(${hue},100%,70%,${0.2+0.1*d})`;
+    ctx.lineWidth=d*0.5;
+    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+    if(Math.random()<0.6)
+      bolt(x2,y2,len*0.7,a+(Math.random()-0.5),d-1,t);
+  }
+
+  const runner=makeRunner(()=>{
+    const t=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,10,0.2)';
+    ctx.fillRect(0,0,W,H);
+    for(let i=0;i<4;i++)
+      bolt(W/2,H/2,100,Math.random()*Math.PI*2,8,t+i);
+  });
+  return {unmount(){runner.stop();}};
+}
+
+function starPetalBloomMount(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
+
+  const runner=makeRunner(()=>{
+    const t=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,10,0.25)';
+    ctx.fillRect(0,0,W,H);
+    for(let i=0;i<8;i++){
+      const a=t*0.5+i*Math.PI/4;
+      const r=120+Math.sin(t*2+i)*40;
+      const x=W/2+Math.cos(a)*r;
+      const y=H/2+Math.sin(a)*r;
+      const hue=300+Math.sin(t*2+i)*50;
+      ctx.fillStyle=`hsla(${hue},100%,70%,0.7)`;
+      ctx.beginPath();
+      ctx.arc(x,y,8+Math.sin(t*5+i)*3,0,Math.PI*2);
+      ctx.fill();
+    }
+  });
+  return {unmount(){runner.stop();}};
+}
+
+function magmaFractalFlowMount(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
+
+  function flow(x,y,len,a,d,t){
+    if(d<=0)return;
+    const x2=x+Math.cos(a)*len;
+    const y2=y+Math.sin(a)*len;
+    const hue=30+Math.sin(t+d)*20;
+    ctx.strokeStyle=`hsla(${hue},100%,50%,${0.15+0.05*d})`;
+    ctx.lineWidth=d*0.6;
+    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();
+    flow(x2,y2,len*0.9,a+(Math.random()-0.5)*0.6,d-1,t);
+  }
+
+  const runner=makeRunner(()=>{
+    const t=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(10,0,0,0.2)';
+    ctx.fillRect(0,0,W,H);
+    for(let i=0;i<6;i++)
+      flow(W/2,H/2,100,Math.random()*Math.PI*2,8,t);
+  });
+  return {unmount(){runner.stop();}};
+}
+
+function quantumSpiralMount(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  let t0=performance.now();
+
+  const runner=makeRunner(()=>{
+    const t=(performance.now()-t0)/1000;
+    ctx.fillStyle='rgba(0,0,10,0.2)';
+    ctx.fillRect(0,0,W,H);
+    for(let i=0;i<200;i++){
+      const a=i*0.3+t*0.6;
+      const r=i*1.5+Math.sin(t*2+i*0.3)*8;
+      const x=W/2+Math.cos(a)*r;
+      const y=H/2+Math.sin(a)*r;
+      const hue=180+Math.sin(t+i*0.2)*120;
+      ctx.fillStyle=`hsla(${hue},100%,70%,0.5)`;
+      ctx.fillRect(x,y,2,2);
+    }
+  });
+  return {unmount(){runner.stop();}};
 }
 
 const templates = {
@@ -7140,11 +7116,14 @@ const templates = {
   fractalVine: { mount: fractalVineMount },
   fractalCrystal: { mount: fractalCrystalMount },
 	fractalWeb: {mount: fractalWebMount },
-  fractalLightningForest: { mount: fractalLightningForestMount },	
-  fractalBioVine: { mount: fractalBioVineMount },
-  fractalLiquidMirror: { mount: fractalLiquidMirrorMount },	
-  fractalPrismWaves: { mount: fractalPrismWavesMount },	
-  fractalQuantumBloom: { mount: fractalQuantumBloomMount }
+  fractalPrismWaves: { mount: fractalPrismWavesMount },
+  fractalCrystalBloom: { mount: fractalCrystalBloomMount },
+  plasmaPhoenix: { mount: plasmaPhoenixMount },
+  bioFractalVine: { mount: bioFractalVineMount },
+  electricFractalStorm: { mount: electricFractalStormMount },
+  starPetalBloom: { mount: starPetalBloomMount },
+  magmaFractalFlow: { mount: magmaFractalFlowMount },
+  quantumSpiral: { mount: quantumSpiralMount }
 };
 
 window.addEventListener('beforeunload', ()=>{
